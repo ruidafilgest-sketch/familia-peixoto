@@ -623,14 +623,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <input type="text" id="search-socios" placeholder="🔍 Pesquisar por nome, número ou email..." oninput="renderSocios()" />
         <select id="filter-cat" onchange="renderSocios()">
           <option value="">Todas as categorias</option>
-          <option>Atleta</option>
-          <option>Normal</option>
-          <option>Reformado</option>
-          <option>Fundador</option>
-          <option>Socio beneficios</option>
-          <option>Socio Falecido</option>
-          <option>Honorário</option>
-          <option>Júnior</option>
         </select>
         <select id="filter-estado" onchange="renderSocios()">
           <option value="">Todos os estados</option>
@@ -656,7 +648,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
             </select>
             <select id="rel-dev-cat" onchange="renderRelatorioDevedores()" style="padding:7px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;outline:none">
               <option value="">Todas as categorias</option>
-              <option>Atleta</option><option>Normal</option><option>Reformado</option><option>Fundador</option><option>Socio beneficios</option><option>Honorário</option><option>Júnior</option>
             </select>
             <button class="btn btn-accent" onclick="imprimirRelatorioDevedores()">🖨️ Imprimir</button>
             <button class="btn btn-outline" onclick="document.getElementById('rel-devedores').style.display='none'">✕ Fechar</button>
@@ -1014,16 +1005,27 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
           </div>
         </div>
 
-        <!-- QUOTAS PADRÃO -->
-        <div class="quota-card">
-          <h4>💰 Valores de Quotas Padrão</h4>
-          <div class="form-grid" style="margin-top:12px">
-            <div class="form-group"><label>Atleta (€/ano)</label><input id="cfg-quota-atleta" type="number" step="0.01" placeholder="20.00"/></div>
-            <div class="form-group"><label>Normal (€/ano)</label><input id="cfg-quota-normal" type="number" step="0.01" placeholder="10.00"/></div>
-            <div class="form-group"><label>Reformado (€/ano)</label><input id="cfg-quota-reformado" type="number" step="0.01" placeholder="10.00"/></div>
-            <div class="form-group"><label>Júnior (€/ano)</label><input id="cfg-quota-junior" type="number" step="0.01" placeholder="0.00"/></div>
-            <div class="form-group"><label>Joia de Inscrição</label><input id="cfg-joia" type="number" step="0.01" placeholder="0.00"/></div>
-            <div class="form-group"><label>Ano Corrente</label><input id="cfg-ano" type="number" value="2026" placeholder="2026"/></div>
+        <!-- TIPOS DE SÓCIO + QUOTAS — Editor dinâmico -->
+        <div class="quota-card" style="grid-column:1/-1">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+            <h4 style="margin:0">👥 Tipos de Sócio e Valores de Quota</h4>
+            <button class="btn btn-accent" onclick="abrirModalTipoSocio()" style="font-size:12px;padding:7px 14px">+ Novo Tipo</button>
+          </div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:14px">
+            💡 Define os tipos de sócio da associação e o valor anual de quota de cada um. Estes valores são usados automaticamente na geração de quotas.
+          </div>
+          <div id="lista-tipos-socio" style="display:flex;flex-direction:column;gap:8px">
+            <div style="text-align:center;padding:24px;color:var(--text2);font-size:13px">A carregar...</div>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div class="form-group" style="margin:0;flex:0 0 180px">
+              <label>Joia de Inscrição (€)</label>
+              <input id="cfg-joia" type="number" step="0.01" placeholder="0.00"/>
+            </div>
+            <div class="form-group" style="margin:0;flex:0 0 140px">
+              <label>Ano Corrente</label>
+              <input id="cfg-ano" type="number" value="2026" placeholder="2026"/>
+            </div>
           </div>
         </div>
 
@@ -1393,7 +1395,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       <div id="inv-tab-emprestimos" style="display:none;">
         <table class="data-table">
           <thead><tr>
-            <th>Artigo</th><th>Qtd</th><th>Sócio / Atleta</th>
+            <th>Artigo</th><th>Qtd</th><th>Sócio / Membro</th>
             <th>Saída</th><th>Devolução prevista</th><th>Estado</th><th>Acções</th>
           </tr></thead>
           <tbody id="emp-tbody"></tbody>
@@ -1407,7 +1409,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         </div>
         <table class="data-table">
           <thead><tr>
-            <th>Data</th><th>Artigo</th><th>Qtd</th><th>Sócio / Atleta</th>
+            <th>Data</th><th>Artigo</th><th>Qtd</th><th>Sócio / Membro</th>
             <th>Saída</th><th>Devolução</th><th>Estado devolução</th><th>Obs</th>
           </tr></thead>
           <tbody id="hist-tbody"></tbody>
@@ -1426,7 +1428,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
           <div class="form-grid">
             <div class="form-group">
               <label>Nome do artigo *</label>
-              <input type="text" id="art-nome" placeholder="ex: Taco de minigolfe adulto">
+              <input type="text" id="art-nome" placeholder="ex: Bombo adulto, farda tamanho M...">
             </div>
             <div class="form-group">
               <label>Categoria *</label>
@@ -1497,7 +1499,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
               <input type="number" id="emp-qtd" min="1" value="1">
             </div>
             <div class="form-group">
-              <label>Sócio / Atleta *</label>
+              <label>Sócio / Membro *</label>
               <input type="text" id="emp-socio" placeholder="Nome ou número de sócio">
             </div>
             <div class="form-group">
@@ -1687,7 +1689,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       <div class="form-grid">
         <div class="form-group"><label>Número de Sócio</label><input id="s-num" type="text" placeholder="Ex: 208" /></div>
         <div class="form-group"><label>Categoria</label>
-          <select id="s-cat"><option>Atleta</option><option>Normal</option><option>Reformado</option><option>Fundador</option><option>Socio beneficios</option><option>Honorário</option><option>Júnior</option></select>
+          <select id="s-cat"><option value="">Seleccionar tipo...</option></select>
         </div>
         <div class="form-group full"><label>Nome Completo</label><input id="s-nome" type="text" placeholder="Nome e apelido" /></div>
         <div class="form-group"><label>Email</label><input id="s-email" type="email" placeholder="email@exemplo.com" /></div>
@@ -1722,6 +1724,35 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
   </div>
 </div>
 
+<!-- MODAL TIPO SÓCIO -->
+<div class="modal-overlay" id="modal-tipo-socio">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <h3 id="modal-tipo-socio-title">Novo Tipo de Sócio</h3>
+      <button class="modal-close" onclick="closeModal('modal-tipo-socio')">✕</button>
+    </div>
+    <input type="hidden" id="modal-tipo-socio-key">
+    <div class="form-grid" style="margin-top:16px">
+      <div class="form-group full">
+        <label>Nome do Tipo *</label>
+        <input id="modal-tipo-socio-nome" type="text" placeholder="Ex: Sócio Normal, Benemérito, Honorário...">
+      </div>
+      <div class="form-group full">
+        <label>Valor da Quota Anual (€) <span style="color:var(--text2);font-size:11px">— deixa em branco se não aplica</span></label>
+        <input id="modal-tipo-socio-quota" type="number" step="0.01" placeholder="Ex: 15.00">
+      </div>
+      <div class="form-group full">
+        <label>Descrição <span style="color:var(--text2);font-size:11px">— opcional</span></label>
+        <input id="modal-tipo-socio-desc" type="text" placeholder="Breve descrição do tipo de sócio">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-tipo-socio')">Cancelar</button>
+      <button class="btn btn-accent" onclick="gravarTipoSocio()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL QUOTA -->
 <div class="modal-overlay" id="modal-quota">
   <div class="modal">
@@ -1738,7 +1769,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <div class="form-group"><label>Estado</label>
           <select id="q-estado"><option value="pago">Pago</option><option value="pendente">Pendente</option><option value="parcial">Parcial</option></select>
         </div>
-        <div class="form-group full"><label>Descrição / Referência</label><input id="q-desc" type="text" placeholder="Ex: Quota anual atleta 2026" /></div>
+        <div class="form-group full"><label>Descrição / Referência</label><input id="q-desc" type="text" placeholder="Ex: Quota anual 2026" /></div>
         <div class="form-group"><label>Meio de Pagamento</label>
           <select id="q-meio">
             <option value="Caixa">💵 Caixa (numerário)</option>
@@ -1795,7 +1826,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
           <select id="r-cat">
             <optgroup label="── Quotas e Jóias ──">
               <option value="Quotas normais">7211 — Quotas normais</option>
-              <option value="Quotas atletas">7212 — Quotas atletas</option>
+              <option value="Quotas Tipo B">7212 — Quotas Tipo B</option>
               <option value="Jóias de inscrição">7213 — Jóias de inscrição</option>
               <option value="Quotas extraordinárias">7214 — Quotas extraordinárias</option>
             </optgroup>
@@ -2803,7 +2834,7 @@ window.openModalSocio = function() {
   editSocioKey = null;
   document.getElementById('modal-socio-title').textContent = 'Novo Sócio';
   ['s-num','s-nome','s-email','s-tel','s-nif','s-nasc','s-insc','s-obs','s-morada','s-rid'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('s-cat').value = 'Atleta';
+  document.getElementById('s-cat').value = '';
   document.getElementById('s-estado').value = 'Ativo';
   document.getElementById('s-insc').value = new Date().toISOString().slice(0,10);
   resetFotoModal(null);
@@ -2823,7 +2854,7 @@ window.editarSocio = function(key) {
   document.getElementById('s-insc').value = s.inscricao||'';
   document.getElementById('s-obs').value = s.obs||'';
   document.getElementById('s-morada').value = s.morada||'';
-  document.getElementById('s-cat').value = s.categoria||'Atleta';
+  document.getElementById('s-cat').value = s.categoria||'';
   document.getElementById('s-estado').value = s.estado||'Ativo';
   document.getElementById('s-rid').value = s.resultadosId||'';
   openModal('modal-socio');
@@ -2951,7 +2982,9 @@ window.abrirModalQuota = function(socioKey, quotaKey='') {
   document.getElementById('q-socio-nome').dataset.socioKey = socioKey;
   document.getElementById('q-ano').value = new Date().getFullYear();
   document.getElementById('q-data').value = new Date().toISOString().slice(0,10);
-  const val = s?.categoria === 'Atleta' ? '20' : '10';
+  // valor da quota baseado no tipo de sócio (dinâmico)
+  const tipoSocio = tiposSocio.find(t => t.nome === s?.categoria);
+  const val = tipoSocio?.quota ? String(tipoSocio.quota) : '';
   document.getElementById('q-valor').value = val;
   document.getElementById('q-desc').value = `Quota anual ${s?.categoria||''} ${new Date().getFullYear()}`;
   document.getElementById('q-estado').value = 'pago';
@@ -3052,7 +3085,8 @@ window.gerarQuotasAnuais = async function() {
   for (const [sk, s] of ativos) {
     const jaExiste = Object.values(quotas).find(q => q.socioKey===sk && q.ano==ano);
     if (!jaExiste) {
-      const val = s.categoria === 'Atleta' ? 20 : 10;
+      const tipoS = tiposSocio.find(t => t.nome === s.categoria);
+      const val = tipoS?.quota ? Number(tipoS.quota) : 0;
       await push(ref(db, '/peixoto/quotas'), {
         socioKey: sk, ano, valor: val,
         descricao: `Quota anual ${s.categoria} ${ano}`,
@@ -3910,7 +3944,7 @@ window.renderRelatorio = function() {
   const resultado = totalRec - totalDesp;
   const totalSocios = Object.keys(socios).length;
   const ativos = Object.values(socios).filter(s=>s.estado==='Ativo').length;
-  const atletasAtivos = Object.values(socios).filter(s=>s.estado==='Ativo'&&s.categoria==='Atleta').length;
+  const atletasAtivos = 0; // removido — tipos dinâmicos
   const quotasPagas = Object.values(quotas).filter(q=>q.ano==ano&&q.estado==='pago').length;
   const quotasPendentes = ativos - quotasPagas;
   const cfg = configuracoes;
@@ -3940,13 +3974,13 @@ window.renderRelatorio = function() {
 
       ${secao(2,'Situação Associativa')}
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:12px">
-        ${[['Total Sócios',totalSocios,'var(--text)'],['Ativos',ativos,'var(--green)'],['Atletas Ativos',atletasAtivos,'var(--blue)'],['Quotas Pagas',quotasPagas,'var(--green)'],['Quotas Pendentes',quotasPendentes,'var(--accent)']].map(([l,v,c])=>`
+        ${[['Total Sócios',totalSocios,'var(--text)'],['Ativos',ativos,'var(--green)'],['Quotas Pagas',quotasPagas,'var(--green)'],['Quotas Pendentes',quotasPendentes,'var(--accent)']].map(([l,v,c])=>`
           <div style="background:var(--bg2);border-radius:8px;padding:12px;text-align:center">
             <div style="font-family:'Bebas Neue';font-size:28px;color:${c}">${v}</div>
             <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">${l}</div>
           </div>`).join('')}
       </div>
-      ${paragrafo(`À data de encerramento do exercício ${ano}, a associação conta com <strong>${ativos} sócios ativos</strong>, dos quais <strong>${atletasAtivos} são atletas</strong>. Registaram-se <strong>${quotasPagas} quotas pagas</strong> (${ativos?Math.round(quotasPagas/ativos*100):0}% de cobrança).`)}
+      ${paragrafo(`À data de encerramento do exercício ${ano}, a associação conta com <strong>${ativos} sócios ativos</strong>, Registaram-se <strong>${quotasPagas} quotas pagas</strong> (${ativos?Math.round(quotasPagas/ativos*100):0}% de cobrança).`)}
 
       ${secao(3,'Atividade Financeira')}
       <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">
@@ -3982,12 +4016,12 @@ window.renderRelatorio = function() {
 
       ${secao(4,'Proposta de Aplicação do Resultado')}
       ${paragrafo(resultado >= 0
-        ? `O resultado positivo do exercício de <strong>${resultado.toFixed(2)} €</strong> (superávit) propõe-se que seja incorporado nos fundos patrimoniais da associação, para reforço da capacidade financeira e prossecução dos objetivos estatutários, nomeadamente o desenvolvimento da modalidade de Minigolfe e o apoio à participação dos atletas nas competições nacionais e internacionais.`
+        ? `O resultado positivo do exercício de <strong>${resultado.toFixed(2)} €</strong> (superávit) propõe-se que seja incorporado nos fundos patrimoniais da associação, para reforço da capacidade financeira e prossecução dos objetivos estatutários, nomeadamente o desenvolvimento das actividades musicais e recreativas e o apoio à participação dos membros nas iniciativas da associação.`
         : `O resultado negativo do exercício de <strong>${Math.abs(resultado).toFixed(2)} €</strong> (déficit) será coberto pelos fundos patrimoniais existentes. A Direção compromete-se a adotar medidas de contenção de gastos e reforço de rendimentos no exercício seguinte, com especial incidência na captação de patrocínios e no reforço da cobrança de quotas.`
       )}
 
       ${secao(5,'Nota Final')}
-      ${paragrafo('A Direção agradece a todos os sócios, atletas, colaboradores, patrocinadores e entidades parceiras o apoio prestado durante o exercício, sem o qual não seria possível prosseguir a missão da associação.')}
+      ${paragrafo('A Direção agradece a todos os sócios, colaboradores, patrocinadores e entidades parceiras o apoio prestado durante o exercício, sem o qual não seria possível prosseguir a missão da associação.')}
 
       <div style="margin-top:32px;padding-top:16px;border-top:1px solid var(--border2)">
         <p style="font-size:11px;color:var(--text2);font-style:italic;margin-bottom:20px">Aprovado em Assembleia Geral realizada em ____/____/${ano}</p>
@@ -4080,7 +4114,7 @@ const PLANO_CONTAS = [
   { codigo:'688',  nome:'Outros gastos e perdas',          classe:'6', tipo:'G',  dc:'D', grupo:'68' },
   // CLASSE 7 — RENDIMENTOS
   { codigo:'7211', nome:'Quotas de associados — Normais',  classe:'7', tipo:'R',  dc:'C', grupo:'72' },
-  { codigo:'7212', nome:'Quotas de associados — Atletas',  classe:'7', tipo:'R',  dc:'C', grupo:'72' },
+  { codigo:'7212', nome:'Quotas de associados — Tipo B',  classe:'7', tipo:'R',  dc:'C', grupo:'72' },
   { codigo:'7213', nome:'Jóias de inscrição',              classe:'7', tipo:'R',  dc:'C', grupo:'72' },
   { codigo:'7214', nome:'Quotas extraordinárias',          classe:'7', tipo:'R',  dc:'C', grupo:'72' },
   { codigo:'7241', nome:'Subsídios do Estado/Autarquias',  classe:'7', tipo:'R',  dc:'C', grupo:'72' },
@@ -4122,7 +4156,7 @@ const GRUPOS_CONTAS = {
 // Mapa subconta → conta SNC (receitas)
 const CAT_CONTA_REC = {
   'Quotas normais':          '7211',
-  'Quotas atletas':          '7212',
+  'Quotas Tipo B':           '7212',
   'Jóias de inscrição':      '7213',
   'Quotas extraordinárias':  '7214',
   'Subsídio Estado/Câmara':  '7241',
@@ -4498,10 +4532,6 @@ function preencherFormConfig() {
     "cfg-mbway": c.mbway || "",
     "cfg-mbway-titular": c.mbwayTitular || "",
     "cfg-mb-entidade": c.mbEntidade || "",
-    "cfg-quota-atleta": c.quotaAtleta || "20",
-    "cfg-quota-normal": c.quotaNormal || "10",
-    "cfg-quota-reformado": c.quotaReformado || "10",
-    "cfg-quota-junior": c.quotaJunior || "0",
     "cfg-joia": c.joia || "0",
     "cfg-ano": c.ano || "2026",
     "cfg-resend-key": c.resendKey || "",
@@ -4544,10 +4574,6 @@ window.gravarConfiguracoes = async function() {
     mbway: document.getElementById("cfg-mbway").value.trim(),
     mbwayTitular: document.getElementById("cfg-mbway-titular").value.trim(),
     mbEntidade: document.getElementById("cfg-mb-entidade").value.trim(),
-    quotaAtleta: document.getElementById("cfg-quota-atleta").value,
-    quotaNormal: document.getElementById("cfg-quota-normal").value,
-    quotaReformado: document.getElementById("cfg-quota-reformado").value,
-    quotaJunior: document.getElementById("cfg-quota-junior").value,
     joia: document.getElementById("cfg-joia").value,
     ano: document.getElementById("cfg-ano").value,
     resendKey: document.getElementById("cfg-resend-key").value.trim(),
@@ -5368,6 +5394,106 @@ window.renderAcertos = function() {
         </td>
       </tr>`;
     }).join('');
+};
+
+// ─── TIPOS DE SÓCIO (dinâmico) ─────────────────────
+let tiposSocio = []; // array [{key, nome, quota, descricao}]
+
+// Listener Firebase — tipos de sócio
+onValue(ref(db, '/peixoto/configuracoes/tiposSocio'), snap => {
+  const data = snap.val() || {};
+  tiposSocio = Object.entries(data).map(([key, v]) => ({ key, ...v }))
+    .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+  renderListaTiposSocio();
+  popularSelectsCategorias();
+});
+
+function popularSelectsCategorias() {
+  const selects = ['filter-cat', 's-cat', 'rel-dev-cat'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.value;
+    // manter primeira option (Todas / Seleccionar)
+    while (el.options.length > 1) el.remove(1);
+    tiposSocio.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.nome;
+      opt.textContent = t.nome;
+      el.appendChild(opt);
+    });
+    if (val) el.value = val;
+  });
+}
+
+function renderListaTiposSocio() {
+  const cont = document.getElementById('lista-tipos-socio');
+  if (!cont) return;
+  if (!tiposSocio.length) {
+    cont.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text2);font-size:13px">Nenhum tipo de sócio definido. Clica em <strong>+ Novo Tipo</strong> para começar.</div>';
+    return;
+  }
+  cont.innerHTML = tiposSocio.map(t => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px">
+        <div style="font-weight:600;font-size:14px;color:var(--text)">${t.nome}</div>
+        ${t.descricao ? `<div style="font-size:11px;color:var(--text2);margin-top:2px">${t.descricao}</div>` : ''}
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--accent);min-width:80px;text-align:center">
+        ${t.quota ? Number(t.quota).toFixed(2) + ' €/ano' : '<span style="color:var(--text2);font-weight:400">Sem quota</span>'}
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline" style="font-size:11px;padding:5px 10px" onclick="editarTipoSocio('${t.key}')">✏️ Editar</button>
+        <button class="btn" style="font-size:11px;padding:5px 10px;background:var(--red);color:#fff;border:none" onclick="eliminarTipoSocio('${t.key}','${t.nome}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+window.abrirModalTipoSocio = function() {
+  document.getElementById('modal-tipo-socio-key').value = '';
+  document.getElementById('modal-tipo-socio-nome').value = '';
+  document.getElementById('modal-tipo-socio-quota').value = '';
+  document.getElementById('modal-tipo-socio-desc').value = '';
+  document.getElementById('modal-tipo-socio-title').textContent = 'Novo Tipo de Sócio';
+  openModal('modal-tipo-socio');
+};
+
+window.editarTipoSocio = function(key) {
+  const t = tiposSocio.find(x => x.key === key);
+  if (!t) return;
+  document.getElementById('modal-tipo-socio-key').value = key;
+  document.getElementById('modal-tipo-socio-nome').value = t.nome || '';
+  document.getElementById('modal-tipo-socio-quota').value = t.quota || '';
+  document.getElementById('modal-tipo-socio-desc').value = t.descricao || '';
+  document.getElementById('modal-tipo-socio-title').textContent = 'Editar Tipo de Sócio';
+  openModal('modal-tipo-socio');
+};
+
+window.gravarTipoSocio = async function() {
+  const key = document.getElementById('modal-tipo-socio-key').value;
+  const nome = document.getElementById('modal-tipo-socio-nome').value.trim();
+  const quota = document.getElementById('modal-tipo-socio-quota').value;
+  const descricao = document.getElementById('modal-tipo-socio-desc').value.trim();
+  if (!nome) { toast('Preenche o nome do tipo de sócio', 'error'); return; }
+  const dados = { nome, quota: quota ? Number(quota) : null, descricao, ordem: tiposSocio.length };
+  try {
+    if (key) {
+      await update(ref(db, `/peixoto/configuracoes/tiposSocio/${key}`), dados);
+      toast('Tipo de sócio actualizado ✅');
+    } else {
+      await push(ref(db, '/peixoto/configuracoes/tiposSocio'), dados);
+      toast('Tipo de sócio criado ✅');
+    }
+    closeModal('modal-tipo-socio');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window.eliminarTipoSocio = async function(key, nome) {
+  if (!confirm(`Eliminar o tipo "${nome}"? Esta acção não pode ser desfeita.`)) return;
+  try {
+    await remove(ref(db, `/peixoto/configuracoes/tiposSocio/${key}`));
+    toast('Tipo de sócio eliminado');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
 // ─── TORNEIOS ──────────────────────────────────────
@@ -8823,7 +8949,7 @@ async function exportarInventarioPDF() {
     const cols2 = [
       { label: 'Artigo',          x: 14,  w: 60 },
       { label: 'Qtd',             x: 74,  w: 16 },
-      { label: 'Sócio / Atleta',  x: 90,  w: 60 },
+      { label: 'Sócio / Membro',  x: 90,  w: 60 },
       { label: 'Contacto',        x: 150, w: 45 },
       { label: 'Saída',           x: 195, w: 26 },
       { label: 'Dev. Prevista',   x: 221, w: 26 },
