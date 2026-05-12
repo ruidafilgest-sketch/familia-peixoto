@@ -2273,7 +2273,7 @@ function exportInventarioPDF() {
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
 
 // ====== NOVO LOGIN ======
-function populateDOB() {
+window.populateDOB = function populateDOB() {
   const dia = document.getElementById('dob-dia');
   const mes = document.getElementById('dob-mes');
   const ano = document.getElementById('dob-ano');
@@ -2286,7 +2286,7 @@ function populateDOB() {
 }
 populateDOB();
 
-function doAdminLogin() {
+window.doAdminLogin = function doAdminLogin() {
   const u = document.getElementById('admin-user').value.trim();
   const p = document.getElementById('admin-pass').value;
   const err = document.getElementById('admin-error');
@@ -2296,7 +2296,7 @@ function doAdminLogin() {
   err.textContent = 'Password incorreta.';
 }
 
-function doSocioLogin() {
+window.doSocioLogin = function doSocioLogin() {
   const num = document.getElementById('socio-num').value.trim();
   const dia = document.getElementById('dob-dia').value;
   const mes = document.getElementById('dob-mes').value;
