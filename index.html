@@ -1031,21 +1031,20 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 
         <!-- EMAIL -->
         <div class="quota-card">
-          <h4>📧 Configurações de Email — Resend</h4>
+          <h4>📧 Configurações de Email — Brevo</h4>
           <div style="padding:12px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.3);border-radius:8px;font-size:12px;color:var(--text2);margin-top:12px;margin-bottom:16px">
-            ✅ O envio de emails usa o <strong>Resend</strong> — <strong>3000 emails/mês grátis</strong>.
-            Cria conta em <a href="https://resend.com" target="_blank" style="color:var(--accent)">resend.com</a>,
-            vai a <strong>API Keys → Create API Key</strong> e cola abaixo.
-            Para enviar a partir do domínio <strong>familiapeixoto.pt</strong>, adiciona-o em <strong>Domains</strong> e verifica o DNS.
+            ✅ O envio de emails usa o <strong>Brevo</strong> — <strong>300 emails/dia grátis</strong>.
+            Conta em <a href="https://brevo.com" target="_blank" style="color:var(--accent)">brevo.com</a> criada com <strong>amrfpeixoto@gmail.com</strong>.
+            Cola a API Key abaixo e define o email remetente.
           </div>
           <div class="form-grid">
             <div class="form-group full">
-              <label>Resend API Key <span style="font-size:10px;color:var(--text2)">(começa com re_...)</span></label>
-              <input id="cfg-resend-key" type="text" placeholder="re_xxxxxxxxxxxxxxxxxxxxxxxx"/>
+              <label>Brevo API Key <span style="font-size:10px;color:var(--text2)">(começa com xkeysib-...)</span></label>
+              <input id="cfg-resend-key" type="text" placeholder="xkeysib-..."/>
             </div>
             <div class="form-group full">
               <label>Email remetente <span style="font-size:10px;color:var(--text2)">(ex: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6d5c3c5d4c3d2c7d4cfc7e6d0cfdcc3cac1c9cac0c388c8c3d2">[email&#160;protected]</a>)</span></label>
-              <input id="cfg-resend-from" type="text" placeholder="Família Peixoto &lt;geral@familiapeixoto.pt&gt;"/>
+              <input id="cfg-resend-from" type="text" placeholder="Família Peixoto &lt;amrfpeixoto@gmail.com&gt;"/>
             </div>
             <div class="form-group full" style="grid-column:1/-1">
               <button class="btn btn-outline" onclick="testarEmail()" style="width:auto">📨 Testar envio de email</button>
@@ -4535,7 +4534,7 @@ function preencherFormConfig() {
     "cfg-joia": c.joia || "0",
     "cfg-ano": c.ano || "2026",
     "cfg-resend-key": c.resendKey || "",
-    "cfg-resend-from": c.resendFrom || "Família Peixoto <geral@familiapeixoto.pt>",
+    "cfg-resend-from": c.resendFrom || "Família Peixoto <amrfpeixoto@gmail.com>",
     "cfg-slogan": c.slogan || "",
     "cfg-historia": c.historia || "",
     "cfg-obs": c.obsAssoc || "",
@@ -7287,10 +7286,10 @@ window.imprimirRelatorioDevedores = function() {
 async function resendEnviar(to, toName, subject, htmlBody) {
   const cfg    = configuracoes || {};
   const apiKey = cfg.resendKey || '';
-  const from   = cfg.resendFrom || 'Família Peixoto <geral@familiapeixoto.pt>';
+  const fromRaw = cfg.resendFrom || 'Família Peixoto <amrfpeixoto@gmail.com>';
 
-  if (!apiKey || !apiKey.startsWith('re_')) {
-    toast('API Key do Resend não configurada. Vai a ⚙️ Configurações → Email.', 'error');
+  if (!apiKey || !apiKey.startsWith('xkeysib-')) {
+    toast('API Key do Brevo não configurada. Vai a ⚙️ Configurações → Email.', 'error');
     return false;
   }
   if (!to) {
@@ -7298,27 +7297,32 @@ async function resendEnviar(to, toName, subject, htmlBody) {
     return false;
   }
 
+  // Parsear "Nome <email>" do campo from
+  const fromMatch = fromRaw.match(/^(.*?)\s*<([^>]+)>$/);
+  const fromName  = fromMatch ? fromMatch[1].trim() : 'Família Peixoto';
+  const fromEmail = fromMatch ? fromMatch[2].trim() : fromRaw.trim();
+
   try {
-    const resp = await fetch('https://resend-proxy.rui-dafilgest.workers.dev', {
+    const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + apiKey,
+        'api-key': apiKey,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from,
-        to: [toName ? `${toName} <${to}>` : to],
-        subject,
-        html: htmlBody
+        sender:   { name: fromName, email: fromEmail },
+        to:       [{ email: to, name: toName || to }],
+        subject:  subject,
+        htmlContent: htmlBody
       })
     });
 
-    const data = await resp.json();
     if (resp.ok) {
       return true;
     } else {
-      console.error('Resend error:', data);
-      toast('Erro Resend: ' + (data.message || resp.status), 'error');
+      const data = await resp.json().catch(() => ({}));
+      console.error('Brevo error:', data);
+      toast('Erro Brevo: ' + (data.message || resp.status), 'error');
       return false;
     }
   } catch(e) {
@@ -7332,38 +7336,40 @@ window.testarEmail = async function() {
   const resultEl = document.getElementById('email-test-result');
   if (resultEl) resultEl.textContent = '⏳ A enviar...';
 
-  // Ler DIRECTAMENTE dos campos — não depende de ter gravado primeiro
   const apiKey  = document.getElementById('cfg-resend-key')?.value.trim() || configuracoes?.resendKey || '';
-  const from    = document.getElementById('cfg-resend-from')?.value.trim() || configuracoes?.resendFrom || 'Família Peixoto <onboarding@resend.dev>';
+  const fromRaw = document.getElementById('cfg-resend-from')?.value.trim() || configuracoes?.resendFrom || 'Família Peixoto <amrfpeixoto@gmail.com>';
   const emailDestino = document.getElementById('cfg-email')?.value.trim() || configuracoes?.email || '';
 
   if (!emailDestino) {
     if (resultEl) resultEl.textContent = '❌ Preenche o campo Email na secção Contactos acima.';
     return;
   }
-  if (!apiKey || !apiKey.startsWith('re_')) {
-    if (resultEl) resultEl.textContent = '❌ API Key inválida — deve começar com re_';
+  if (!apiKey || !apiKey.startsWith('xkeysib-')) {
+    if (resultEl) resultEl.textContent = '❌ API Key inválida — deve começar com xkeysib-';
     return;
   }
 
-  // Usar directamente sem passar por resendEnviar (para maior controlo de erros)
+  const fromMatch = fromRaw.match(/^(.*?)\s*<([^>]+)>$/);
+  const fromName  = fromMatch ? fromMatch[1].trim() : 'Família Peixoto';
+  const fromEmail = fromMatch ? fromMatch[2].trim() : fromRaw.trim();
+
   try {
-    const resp = await fetch('https://resend-proxy.rui-dafilgest.workers.dev', {
+    const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from,
-        to: [emailDestino],
+        sender: { name: fromName, email: fromEmail },
+        to: [{ email: emailDestino }],
         subject: '✅ Teste de email — Portal Família Peixoto',
-        html: '<div style="font-family:sans-serif;padding:24px;max-width:500px"><h2 style="color:#1a3a6b">✅ Email de teste</h2><p>O sistema de envio de emails do Portal Família Peixoto está a funcionar correctamente.</p><p style="color:#666;font-size:12px;margin-top:16px">Enviado em ' + new Date().toLocaleString('pt-PT') + '</p></div>'
+        htmlContent: '<div style="font-family:sans-serif;padding:24px;max-width:500px"><h2 style="color:#1a3a6b">✅ Email de teste</h2><p>O sistema de envio de emails do Portal Família Peixoto está a funcionar correctamente.</p><p style="color:#666;font-size:12px;margin-top:16px">Enviado em ' + new Date().toLocaleString('pt-PT') + '</p></div>'
       })
     });
-    const data = await resp.json();
     if (resp.ok) {
       if (resultEl) resultEl.textContent = '✅ Enviado! Verifica o email ' + emailDestino;
     } else {
-      if (resultEl) resultEl.textContent = '❌ Erro Resend: ' + (data.message || data.name || resp.status);
-      console.error('Resend:', data);
+      const data = await resp.json().catch(() => ({}));
+      if (resultEl) resultEl.textContent = '❌ Erro Brevo: ' + (data.message || resp.status);
+      console.error('Brevo:', data);
     }
   } catch(e) {
     if (resultEl) resultEl.textContent = '❌ Erro de rede: ' + e.message;
@@ -8208,8 +8214,8 @@ window.enviarAlertasQuota = async function() {
   const ano = document.getElementById('filter-ano-quota')?.value || new Date().getFullYear().toString();
   const cfg = configuracoes || {};
 
-  if (!cfg.resendKey || !cfg.resendKey.startsWith('re_')) {
-    toast('API Key do Resend não configurada. Vai a ⚙️ Configurações → Email.', 'error');
+  if (!cfg.resendKey || !cfg.resendKey.startsWith('xkeysib-')) {
+    toast('API Key do Brevo não configurada. Vai a ⚙️ Configurações → Email.', 'error');
     return;
   }
 
