@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal — Família Peixoto</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-app-compat.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-database-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -908,6 +908,7 @@ tr:hover td { background: var(--cinza-cl); }
 <canvas id="canvas-cartao" style="display:none" width="680" height="420"></canvas>
 
 <script>
+window.addEventListener('load', function() {
 // ========== FIREBASE CONFIG ==========
 const firebaseConfig = {
   apiKey: "AIzaSyDKyIymvaOjD4_CjIXH8Y8AhD4CQrpKi0c",
@@ -981,8 +982,8 @@ function doLogin() {
 }
 document.addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
 function loginOk(name) {
-  document.getElementById('login-logo-img').src = LOGO_B64;
-  document.getElementById('sidebar-logo').src = LOGO_B64;
+  const loginLogo = document.getElementById('login-logo-img');
+  if (loginLogo) loginLogo.src = LOGO_B64;
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('user-name-display').textContent = name;
@@ -2196,6 +2197,7 @@ function exportInventarioPDF() {
 }
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
+}); // end window.onload
 </script>
 </body>
 </html>
