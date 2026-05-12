@@ -321,7 +321,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 .s-recibo-num { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); min-width:48px; }
 .s-recibo-desc { flex:1; font-size:12px; }
 .s-recibo-val { font-weight:700; font-size:13px; color:var(--green); white-space:nowrap; }
-/* Torneio card */
+/* Evento card */
 .s-torn-item { border:1px solid var(--border2); border-radius:10px; padding:14px; margin-bottom:10px; }
 .s-torn-nome { font-family:'Bebas Neue',sans-serif; font-size:17px; color:var(--accent); letter-spacing:1px; margin-bottom:4px; }
 .s-torn-meta { font-size:11px; color:var(--text2); display:flex; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
@@ -365,7 +365,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <button class="s-tab active" onclick="showSocioTab('inicio',this)">Início</button>
         <button class="s-tab" onclick="showSocioTab('quotas',this)">Quotas</button>
         <button class="s-tab" onclick="showSocioTab('recibos',this)">Recibos</button>
-        <button class="s-tab" onclick="showSocioTab('torneios',this)">Torneios</button>
+        <button class="s-tab" onclick="showSocioTab('eventos',this)">Eventos</button>
         <button class="s-tab" onclick="showSocioTab('perfil',this)">Perfil</button>
         <button class="s-tab" onclick="showSocioTab('documentos',this)">📁 Documentos</button>
       </div>
@@ -400,10 +400,10 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <div id="s-inicio-resumo"></div>
       </div>
 
-      <!-- Próximos torneios -->
+      <!-- Próximos eventos -->
       <div class="s-card">
-        <div class="s-card-title">🏆 Próximos Torneios</div>
-        <div id="s-inicio-torneios"></div>
+        <div class="s-card-title">🏆 Próximos Eventos</div>
+        <div id="s-inicio-eventos"></div>
       </div>
 
       <!-- Participações e resultados -->
@@ -430,14 +430,14 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
     </div>
 
     <!-- ── TORNEIOS ── -->
-    <div class="s-section" id="s-sec-torneios">
+    <div class="s-section" id="s-sec-eventos">
       <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
         <button class="s-tab active" id="storn-btn-todos" onclick="setSocioTornFilter('todos',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Todos</button>
         <button class="s-tab" id="storn-btn-aberto" onclick="setSocioTornFilter('aberto',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Abertas</button>
         <button class="s-tab" id="storn-btn-inscrito" onclick="setSocioTornFilter('inscrito',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Os meus</button>
       </div>
-      <select id="socio-filter-torneios" style="display:none"><option value="todos">Todos</option><option value="aberto">Abertas</option><option value="inscrito">Os meus</option></select>
-      <div id="socio-torneios-list"></div>
+      <select id="socio-filter-eventos" style="display:none"><option value="todos">Todos</option><option value="aberto">Abertas</option><option value="inscrito">Os meus</option></select>
+      <div id="socio-eventos-list"></div>
     </div>
 
     <!-- ── PERFIL ── -->
@@ -497,7 +497,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       <button class="nav-tab" onclick="showPage('socios')">👥 Sócios</button>
       <button class="nav-tab" onclick="showPage('quotas')">💰 Quotas</button>
       <button class="nav-tab" onclick="showPage('recibos')">🧾 Recibos</button>
-      <button class="nav-tab" onclick="showPage('torneios')">🏆 Torneios</button>
+      <button class="nav-tab" onclick="showPage('eventos')">📅 Eventos</button>
       <button class="nav-tab" onclick="showPage('avisos')">📣 Avisos</button>
       <button class="nav-tab" onclick="showPage('inventario')">📦 Inventário</button>
     </div>
@@ -1149,22 +1149,22 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
     </div><!-- /page-biblioteca -->
 
     <!-- ── TORNEIOS ADMIN ── -->
-    <div id="page-torneios" class="page">
+    <div id="page-eventos" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div>
-          <h2 style="font-family:'Bebas Neue';font-size:28px;color:var(--accent);letter-spacing:2px">🏆 Torneios e Competições</h2>
-          <p style="font-size:13px;color:var(--text2);margin-top:2px">Gere torneios e confirma inscrições dos sócios</p>
+          <h2 style="font-family:'Bebas Neue';font-size:28px;color:var(--accent);letter-spacing:2px">📅 Eventos e Actividades</h2>
+          <p style="font-size:13px;color:var(--text2);margin-top:2px">Gere eventos e actividades da associação</p>
         </div>
-        <button class="btn btn-accent" onclick="openModalTorneio()">+ Novo Torneio</button>
+        <button class="btn btn-accent" onclick="openModalEvento()">+ Novo Evento</button>
       </div>
       <div class="stats-grid" style="margin-bottom:20px">
-        <div class="stat-card"><div class="val" id="torn-stat-total" style="font-size:32px">—</div><div class="lbl">Total Torneios</div></div>
+        <div class="stat-card"><div class="val" id="ev-stat-total" style="font-size:32px">—</div><div class="lbl">Total Eventos</div></div>
         <div class="stat-card"><div class="val" id="torn-stat-abertos" style="font-size:32px;color:var(--green)">—</div><div class="lbl">Inscrições Abertas</div></div>
         <div class="stat-card"><div class="val" id="torn-stat-pendentes" style="font-size:32px;color:var(--accent)">—</div><div class="lbl">Pendentes Confirmação</div></div>
         <div class="stat-card"><div class="val" id="torn-stat-inscritos" style="font-size:32px;color:var(--blue)">—</div><div class="lbl">Total Inscrições</div></div>
       </div>
       <div id="torn-lista-admin"></div>
-    </div><!-- /page-torneios -->
+    </div><!-- /page-eventos -->
 
     <!-- ── EXPORTAÇÃO ── -->
     <div id="page-exportar-dados" class="page">
@@ -1213,9 +1213,9 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">🏆</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:4px">Torneios e Inscrições</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista de torneios e todas as inscrições com estado de confirmação</div>
-          <button class="btn btn-accent" onclick="exportarTorneios()" style="width:100%">⬇️ Exportar Torneios</button>
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px">Eventos e Inscrições</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista de eventos e actividades da associação</div>
+          <button class="btn btn-accent" onclick="exportarEventos()" style="width:100%">⬇️ Exportar Eventos</button>
         </div>
 
       </div>
@@ -1983,15 +1983,15 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 
 
 <!-- MODAL TORNEIO (admin) -->
-<div class="modal-overlay" id="modal-torneio">
+<div class="modal-overlay" id="modal-evento">
   <div class="modal" style="max-width:560px">
     <div class="modal-header">
-      <h3 id="modal-torneio-title">Novo Torneio</h3>
-      <button class="modal-close" onclick="closeModal('modal-torneio')">✕</button>
+      <h3 id="modal-evento-title">Novo Evento</h3>
+      <button class="modal-close" onclick="closeModal('modal-evento')">✕</button>
     </div>
     <div class="modal-body" style="padding:20px 24px;">
       <div class="form-grid">
-        <div class="form-group full"><label>Nome do Torneio / Competição</label>
+        <div class="form-group full"><label>Nome do Evento / Actividade</label>
           <input id="t-nome" type="text" placeholder="Ex: Campeonato de Vizela 2026" />
         </div>
         <div class="form-group"><label>Tipo</label>
@@ -2025,8 +2025,8 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-torneio')">Cancelar</button>
-      <button class="btn btn-accent" onclick="gravarTorneio()">💾 Gravar</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-evento')">Cancelar</button>
+      <button class="btn btn-accent" onclick="gravarEvento()">💾 Gravar</button>
     </div>
   </div>
 </div>
@@ -2201,7 +2201,7 @@ window.doLoginSocio = async function() {
     configuracoes = cfgSnap.val() || {};
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-socio').style.display = 'block';
-    carregarTorneios(); // carregar torneios em tempo real para o sócio
+    carregarEventosAdmin(); // carregar eventos em tempo real para o sócio
     carregarBibliotecaSocio(); // carregar documentos para o sócio
     renderAreaSocio();
   } catch(e) {
@@ -2236,18 +2236,18 @@ window.showSocioTab = function(tab, btn) {
   document.querySelectorAll('.s-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('s-sec-' + tab)?.classList.add('active');
   if (btn) btn.classList.add('active');
-  if (tab === 'torneios') renderTorneisosSocio();
+  if (tab === 'eventos') renderEventosSocio();
   if (tab === 'documentos') renderDocsSocio();
   if (tab === 'perfil') verificarEstadoRgpdSocio();
 };
 
 window.setSocioTornFilter = function(filtro, btn) {
-  document.querySelectorAll('#s-sec-torneios .s-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#s-sec-eventos .s-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  // Actualizar o select legado que a função renderTorneisosSocio usa
-  const sel = document.getElementById('socio-filter-torneios');
+  // Actualizar o select legado que a função renderEventosSocio usa
+  const sel = document.getElementById('socio-filter-eventos');
   if (sel) sel.value = filtro;
-  renderTorneisosSocio();
+  renderEventosSocio();
 };
 
 function renderAreaSocio() {
@@ -2328,12 +2328,12 @@ function renderAreaSocio() {
     (totalPago > 0 ? dadoLinha('Total quotas pagas', totalPago.toFixed(2) + ' €') : '') +
     (meusRecibos.length > 0 ? dadoLinha('Recibos emitidos', meusRecibos.length + ' recibo(s)') : '');
 
-  // ── Próximos torneios no tab Início ──
+  // ── Próximos eventos no tab Início ──
   const torneiosAbertos = Object.entries(torneios||{})
     .filter(([,t]) => t.estado === 'aberto')
     .sort((a,b) => (a[1].data||'').localeCompare(b[1].data||''))
     .slice(0, 3);
-  const tornEl = document.getElementById('s-inicio-torneios');
+  const tornEl = document.getElementById('s-inicio-eventos');
   if (tornEl) {
     if (!torneiosAbertos.length) {
       tornEl.innerHTML = '<div style="font-size:12px;color:var(--text2);text-align:center;padding:12px">Sem torneios com inscrições abertas</div>';
@@ -2347,7 +2347,7 @@ function renderAreaSocio() {
           </div>
           ${jaInscrito
             ? '<span style="font-size:11px;color:var(--green)">✅ Inscrito</span>'
-            : `<button class="btn btn-accent" style="font-size:11px;padding:5px 10px;white-space:nowrap" onclick="showSocioTab('torneios');abrirInscricao('${k}')">Inscrever</button>`
+            : `<button class="btn btn-accent" style="font-size:11px;padding:5px 10px;white-space:nowrap" onclick="showSocioTab('eventos');abrirInscricao('${k}')">Inscrever</button>`
           }
         </div>`;
       }).join('');
@@ -2440,7 +2440,7 @@ function carregarDados() {
   carregarConfiguracoes();
   carregarSecretaria();
   carregarBiblioteca();
-  carregarTorneios();
+  carregarEventosAdmin();
 }
 
 // ─── NAVEGAÇÃO ─────────────────────────────────────
@@ -5376,23 +5376,23 @@ let inscricoes = {};
 let editTorneioKey = null;
 let inscricaoTorneioKey = null; // torneio a que o sócio se quer inscrever
 
-function carregarTorneios() {
-  onValue(ref(db, '/peixoto/torneios'), snap => {
+function carregarEventosAdmin() {
+  onValue(ref(db, '/peixoto/eventos'), snap => {
     torneios = snap.val() || {};
-    renderTorneiosAdmin();
-    if (currentSocioKey) renderTorneisosSocio();
+    renderEventosAdmin();
+    if (currentSocioKey) renderEventosSocio();
   });
   onValue(ref(db, '/peixoto/inscricoes'), snap => {
     inscricoes = snap.val() || {};
-    renderTorneiosAdmin();
-    if (currentSocioKey) renderTorneisosSocio();
+    renderEventosAdmin();
+    if (currentSocioKey) renderEventosSocio();
   });
 }
 
-// ── ADMIN: criar/editar torneio ───────────────────
-window.openModalTorneio = function() {
+// ── ADMIN: criar/editar evento ──
+window.openModalEvento = function() {
   editTorneioKey = null;
-  document.getElementById('modal-torneio-title').textContent = 'Novo Torneio';
+  document.getElementById('modal-evento-title').textContent = 'Novo Evento';
   document.getElementById('t-nome').value  = '';
   document.getElementById('t-tipo').value  = '';
   document.getElementById('t-local').value = '';
@@ -5402,13 +5402,13 @@ window.openModalTorneio = function() {
   document.getElementById('t-vagas').value = '0';
   document.getElementById('t-estado').value = 'aberto';
   document.getElementById('t-desc').value  = '';
-  openModal('modal-torneio');
+  openModal('modal-evento');
 };
 
-window.editarTorneio = function(key) {
+window.editarEvento = function(key) {
   editTorneioKey = key;
   const t = torneios[key];
-  document.getElementById('modal-torneio-title').textContent = 'Editar Torneio';
+  document.getElementById('modal-evento-title').textContent = 'Editar Evento';
   document.getElementById('t-nome').value   = t.nome   || '';
   document.getElementById('t-tipo').value   = t.tipo   || '';
   document.getElementById('t-local').value  = t.local  || '';
@@ -5418,12 +5418,12 @@ window.editarTorneio = function(key) {
   document.getElementById('t-vagas').value  = t.vagas  || '0';
   document.getElementById('t-estado').value = t.estado || 'aberto';
   document.getElementById('t-desc').value   = t.descricao || '';
-  openModal('modal-torneio');
+  openModal('modal-evento');
 };
 
-window.gravarTorneio = async function() {
+window.gravarEvento = async function() {
   const nome = document.getElementById('t-nome').value.trim();
-  if (!nome) { toast('Preenche o nome do torneio', 'error'); return; }
+  if (!nome) { toast('Preenche o nome do evento', 'error'); return; }
   const dados = {
     nome,
     tipo:      document.getElementById('t-tipo').value.trim(),
@@ -5439,22 +5439,22 @@ window.gravarTorneio = async function() {
   try {
     if (editTorneioKey) {
       await update(ref(db, `/portal/torneios/${editTorneioKey}`), dados);
-      toast('Torneio atualizado ✅');
+      toast('Evento atualizado ✅');
     } else {
-      await push(ref(db, '/peixoto/torneios'), dados);
-      toast('Torneio criado ✅');
+      await push(ref(db, '/peixoto/eventos'), dados);
+      toast('Evento criado ✅');
     }
-    closeModal('modal-torneio');
+    closeModal('modal-evento');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-window.apagarTorneio = async function(key) {
-  if (!confirm('Apagar este torneio? As inscrições associadas também serão removidas.')) return;
+window.apagarEvento = async function(key) {
+  if (!confirm('Apagar este evento? As inscrições associadas também serão removidas.')) return;
   // Apagar inscrições do torneio
   const inscTorneio = Object.entries(inscricoes).filter(([,i]) => i.torneioKey === key);
   for (const [ik] of inscTorneio) await remove(ref(db, `/portal/inscricoes/${ik}`));
   await remove(ref(db, `/portal/torneios/${key}`));
-  toast('Torneio removido');
+  toast('Evento removido');
 };
 
 // ── ADMIN: ver e gerir inscritos ──────────────────
@@ -5595,15 +5595,15 @@ window.apagarInscricao = async function(key) {
   if (insc) verInscritos(insc.torneioKey);
 };
 
-// ── ADMIN: render lista de torneios ──────────────
-window.renderTorneiosAdmin = function() {
+// ── ADMIN: render lista de eventos ──
+window.renderEventosAdmin = function() {
   const lista = Object.entries(torneios).sort((a,b) => (b[1].data||'').localeCompare(a[1].data||''));
   const totalInsc = Object.values(inscricoes).length;
   const pendentes = Object.values(inscricoes).filter(i => i.estado === 'pendente').length;
   const abertos   = lista.filter(([,t]) => t.estado === 'aberto').length;
 
   const el = id => document.getElementById(id);
-  if (el('torn-stat-total'))    el('torn-stat-total').textContent    = lista.length;
+  if (el('ev-stat-total'))    el('ev-stat-total').textContent    = lista.length;
   if (el('torn-stat-abertos'))  el('torn-stat-abertos').textContent  = abertos;
   if (el('torn-stat-pendentes'))el('torn-stat-pendentes').textContent = pendentes;
   if (el('torn-stat-inscritos'))el('torn-stat-inscritos').textContent = totalInsc;
@@ -5611,7 +5611,7 @@ window.renderTorneiosAdmin = function() {
   const cont = document.getElementById('torn-lista-admin');
   if (!cont) return;
   if (!lista.length) {
-    cont.innerHTML = '<div class="empty"><div class="icon">🏆</div><p>Nenhum torneio criado</p></div>';
+    cont.innerHTML = '<div class="empty"><div class="icon">📅</div><p>Nenhum evento criado</p></div>';
     return;
   }
 
@@ -5652,8 +5652,8 @@ window.renderTorneiosAdmin = function() {
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
               <button class="btn btn-outline btn-sm" onclick="verInscritos('${key}')">👥 Inscritos</button>
-              <button class="btn btn-outline btn-sm" onclick="editarTorneio('${key}')">✏️</button>
-              <button class="btn btn-danger btn-sm" onclick="apagarTorneio('${key}')">🗑️</button>
+              <button class="btn btn-outline btn-sm" onclick="editarEvento('${key}')">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="apagarEvento('${key}')">🗑️</button>
             </div>
           </div>
         </div>
@@ -5661,7 +5661,7 @@ window.renderTorneiosAdmin = function() {
   }).join('');
 };
 
-// ── SÓCIO: ver e inscrever-se em torneios ─────────
+// ── SÓCIO: ver e inscrever-se em eventos ──
 // ── SÓCIO: ver documentos da biblioteca ──────────
 window.renderDocsSocio = function() {
   const cont = document.getElementById('socio-docs-list');
@@ -5691,9 +5691,9 @@ window.renderDocsSocio = function() {
   }).join('');
 };
 
-window.renderTorneisosSocio = function() {
-  const filtro = document.getElementById('socio-filter-torneios')?.value || 'todos';
-  const cont   = document.getElementById('socio-torneios-list');
+window.renderEventosSocio = function() {
+  const filtro = document.getElementById('socio-filter-eventos')?.value || 'todos';
+  const cont   = document.getElementById('socio-eventos-list');
   if (!cont) return;
 
   // Inscrições do sócio atual
@@ -6001,14 +6001,14 @@ window.exportarDespesas = async function() {
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
 
-window.exportarTorneios = async function() {
+window.exportarEventos = async function() {
   try {
     const XLSX = await getXLSX();
     setExpProgress(50, 'A preparar torneios...');
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Torneios');
+    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Eventos');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, inscricoesParaLinhas()), 'Inscrições');
-    baixarXLSX(XLSX, wb, `Torneios_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
+    baixarXLSX(XLSX, wb, `Eventos_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
     setExpProgress(100, 'Exportado!');
     toast('Torneios exportados ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
@@ -6050,8 +6050,8 @@ window.exportarTudo = async function() {
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, acertosParaLinhas(ano)), 'Acertos');
     await new Promise(r=>setTimeout(r,30));
 
-    setExpProgress(92, 'Folha Torneios...');
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Torneios');
+    setExpProgress(92, 'Folha Eventos...');
+    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Eventos');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, inscricoesParaLinhas()), 'Inscrições');
     await new Promise(r=>setTimeout(r,30));
 
@@ -6202,9 +6202,9 @@ window.abrirFicha = function(key) {
     html += '</div>';
   }
 
-  // ── Torneios / Inscrições ──
+  // ── Eventos / Inscrições ──
   if (minhasInsc.length) {
-    html += secTitle(`Inscrições em Torneios (${minhasInsc.length})`);
+    html += secTitle(`Inscrições em Eventos (${minhasInsc.length})`);
     html += '<div style="padding:0 20px">';
     minhasInsc.forEach(([k,i]) => {
       const cor = i.estado==='confirmado'?'var(--green)':i.estado==='rejeitado'?'var(--red)':'var(--accent)';
@@ -6585,9 +6585,9 @@ window.imprimirFicha = function() {
   </table>
 
   ${minhasInsc.length ? `
-  <div class="secao">Inscrições em Torneios (${minhasInsc.length})</div>
+  <div class="secao">Inscrições em Eventos (${minhasInsc.length})</div>
   <table class="mov">
-    <thead><tr><th>Torneio</th><th>Categoria</th><th>Estado</th></tr></thead>
+    <thead><tr><th>Evento</th><th>Categoria</th><th>Estado</th></tr></thead>
     <tbody>${inscHTML}</tbody>
   </table>` : ''}
 
@@ -7393,7 +7393,7 @@ window.enviarCartaoPorEmail = async function(key) {
 };
 
 
-// ── Notificação de inscrição em torneio ──────────
+// ── Notificação de inscrição em evento ──
 async function enviarNotificacaoInscricao(insc, s, estado) {
   if (!s?.email) return;
   const cfg       = configuracoes || {};
@@ -7420,15 +7420,15 @@ async function enviarNotificacaoInscricao(insc, s, estado) {
     .hero-sub{font-size:12px;color:#555}
     .body{padding:16px 24px 24px}
     .intro{font-size:13px;color:#1a2a3a;line-height:1.7;margin-bottom:16px}
-    .torneio-box{background:#f4f7fb;border:1px solid #e0e8f0;border-radius:10px;padding:14px 16px;margin-bottom:16px}
-    .torneio-nome{font-size:15px;font-weight:700;color:#0f1e35;margin-bottom:8px}
-    .torneio-row{display:flex;gap:8px;align-items:center;font-size:12px;color:#555;margin-bottom:4px}
+    .evento-box{background:#f4f7fb;border:1px solid #e0e8f0;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+    .evento-nome{font-size:15px;font-weight:700;color:#0f1e35;margin-bottom:8px}
+    .evento-row{display:flex;gap:8px;align-items:center;font-size:12px;color:#555;margin-bottom:4px}
     .bottom{background:#f4f7fb;padding:12px 24px;font-size:10px;color:#999;text-align:center;border-top:1px solid #e0e8f0}
   </style></head><body>
   <div class="wrap">
     <div class="top">
       <img src="${LOGO_B64}" alt="${nomeAssoc}">
-      <div><h1>${nomeAssoc.split('—')[0].trim()}</h1><p>Portal Associativo · Torneios</p></div>
+      <div><h1>${nomeAssoc.split('—')[0].trim()}</h1><p>Portal Associativo · Eventos</p></div>
     </div>
     <div class="hero">
       <div class="hero-titulo">${icone} ${titulo}</div>
@@ -7437,16 +7437,16 @@ async function enviarNotificacaoInscricao(insc, s, estado) {
     <div class="body">
       <p class="intro">Caro(a) <strong>${s.nome}</strong> (Sócio Nº ${s.numero||'—'}),</p>
       ${confirmado
-        ? `<p class="intro">Temos o prazer de informar que a tua inscrição no torneio abaixo foi <strong style="color:${corEst}">confirmada</strong>. Fica atento às comunicações da associação para mais detalhes sobre o evento.</p>`
-        : `<p class="intro">Informamos que a tua inscrição no torneio abaixo <strong style="color:${corEst}">não foi aceite</strong>. Para mais informações, contacta a secretaria da associação.</p>`
+        ? `<p class="intro">Temos o prazer de informar que a tua inscrição no evento abaixo foi <strong style="color:${corEst}">confirmada</strong>. Fica atento às comunicações da associação para mais detalhes sobre o evento.</p>`
+        : `<p class="intro">Informamos que a tua inscrição no evento abaixo <strong style="color:${corEst}">não foi aceite</strong>. Para mais informações, contacta a secretaria da associação.</p>`
       }
-      <div class="torneio-box">
-        <div class="torneio-nome">🏆 ${t.nome||insc.torneioNome||'—'}</div>
-        ${t.data  ? `<div class="torneio-row">📅 <strong>Data:</strong> ${t.data}</div>` : ''}
-        ${t.local ? `<div class="torneio-row">📍 <strong>Local:</strong> ${t.local}</div>` : ''}
-        ${t.tipo  ? `<div class="torneio-row">📋 <strong>Tipo:</strong> ${t.tipo}</div>` : ''}
-        ${insc.categoria ? `<div class="torneio-row">🏅 <strong>Categoria inscrita:</strong> ${insc.categoria}</div>` : ''}
-        <div class="torneio-row" style="margin-top:8px;padding-top:8px;border-top:1px solid #e0e8f0">
+      <div class="evento-box">
+        <div class="evento-nome">🏆 ${t.nome||insc.torneioNome||'—'}</div>
+        ${t.data  ? `<div class="evento-row">📅 <strong>Data:</strong> ${t.data}</div>` : ''}
+        ${t.local ? `<div class="evento-row">📍 <strong>Local:</strong> ${t.local}</div>` : ''}
+        ${t.tipo  ? `<div class="evento-row">📋 <strong>Tipo:</strong> ${t.tipo}</div>` : ''}
+        ${insc.categoria ? `<div class="evento-row">🏅 <strong>Categoria inscrita:</strong> ${insc.categoria}</div>` : ''}
+        <div class="evento-row" style="margin-top:8px;padding-top:8px;border-top:1px solid #e0e8f0">
           <strong style="color:${corEst}">${icone} Estado: ${confirmado ? 'CONFIRMADO' : 'NÃO ACEITE'}</strong>
         </div>
       </div>
@@ -7733,7 +7733,7 @@ window.showPage = function(page) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   event.target.classList.add('active');
-  if (page === 'torneios') renderTorneiosAdmin();
+  if (page === 'eventos') renderEventosAdmin();
   if (page === 'exportar-dados') renderExportPage();
   if (page === 'rgpd') rgpdCarregar();
   if (page === 'avisos') renderAvisosAdmin();
