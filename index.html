@@ -4583,7 +4583,7 @@ window.gravarConfiguracoes = async function() {
     atualizadoEm: new Date().toISOString()
   };
   try {
-    await set(ref(db, "/peixoto/configuracoes"), dados);
+    await update(ref(db, "/peixoto/configuracoes"), dados);
     configAssoc = dados;
     configuracoes = dados; // manter sincronizado
     toast("Configurações gravadas ✅");
