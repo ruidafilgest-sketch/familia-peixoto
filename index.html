@@ -377,7 +377,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <button class="s-tab active" onclick="showSocioTab('inicio',this)">Início</button>
         <button class="s-tab" onclick="showSocioTab('quotas',this)">Quotas</button>
         <button class="s-tab" onclick="showSocioTab('recibos',this)">Recibos</button>
-        <button class="s-tab" onclick="showSocioTab('eventos',this)">Eventos</button>
         <button class="s-tab" onclick="showSocioTab('perfil',this)">Perfil</button>
         <button class="s-tab" onclick="showSocioTab('documentos',this)">📁 Documentos</button>
       </div>
@@ -412,17 +411,9 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <div id="s-inicio-resumo"></div>
       </div>
 
-      <!-- Próximos eventos -->
-      <div class="s-card">
-        <div class="s-card-title">🏆 Próximos Eventos</div>
-        <div id="s-inicio-eventos"></div>
-      </div>
 
-      <!-- Participações e resultados -->
-      <div class="s-card" id="card-participacoes" style="display:none">
-        <div class="s-card-title">🏅 As Minhas Participações</div>
-        <div id="s-inicio-participacoes"></div>
-      </div>
+
+
     </div>
 
     <!-- ── QUOTAS ── -->
@@ -441,16 +432,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       </div>
     </div>
 
-    <!-- ── TORNEIOS ── -->
-    <div class="s-section" id="s-sec-eventos">
-      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-        <button class="s-tab active" id="storn-btn-todos" onclick="setSocioTornFilter('todos',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Todos</button>
-        <button class="s-tab" id="storn-btn-aberto" onclick="setSocioTornFilter('aberto',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Abertas</button>
-        <button class="s-tab" id="storn-btn-inscrito" onclick="setSocioTornFilter('inscrito',this)" style="border:1px solid var(--border2);border-radius:20px;padding:6px 14px">Os meus</button>
-      </div>
-      <select id="socio-filter-eventos" style="display:none"><option value="todos">Todos</option><option value="aberto">Abertas</option><option value="inscrito">Os meus</option></select>
-      <div id="socio-eventos-list"></div>
-    </div>
 
     <!-- ── PERFIL ── -->
     <div class="s-section" id="s-sec-documentos">
@@ -509,7 +490,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       <button class="nav-tab" onclick="showPage('socios')">👥 Sócios</button>
       <button class="nav-tab" onclick="showPage('quotas')">💰 Quotas</button>
       <button class="nav-tab" onclick="showPage('recibos')">🧾 Recibos</button>
-      <button class="nav-tab" onclick="showPage('eventos')">📅 Eventos</button>
       <button class="nav-tab" onclick="showPage('avisos')">📣 Avisos</button>
       <button class="nav-tab" onclick="showPage('inventario')">📦 Inventário</button>
     </div>
@@ -1161,23 +1141,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       </div>
     </div><!-- /page-biblioteca -->
 
-    <!-- ── TORNEIOS ADMIN ── -->
-    <div id="page-eventos" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-        <div>
-          <h2 style="font-family:'Bebas Neue';font-size:28px;color:var(--accent);letter-spacing:2px">📅 Eventos e Actividades</h2>
-          <p style="font-size:13px;color:var(--text2);margin-top:2px">Gere eventos e actividades da associação</p>
-        </div>
-        <button class="btn btn-accent" onclick="openModalEvento()">+ Novo Evento</button>
-      </div>
-      <div class="stats-grid" style="margin-bottom:20px">
-        <div class="stat-card"><div class="val" id="ev-stat-total" style="font-size:32px">—</div><div class="lbl">Total Eventos</div></div>
-        <div class="stat-card"><div class="val" id="torn-stat-abertos" style="font-size:32px;color:var(--green)">—</div><div class="lbl">Inscrições Abertas</div></div>
-        <div class="stat-card"><div class="val" id="torn-stat-pendentes" style="font-size:32px;color:var(--accent)">—</div><div class="lbl">Pendentes Confirmação</div></div>
-        <div class="stat-card"><div class="val" id="torn-stat-inscritos" style="font-size:32px;color:var(--blue)">—</div><div class="lbl">Total Inscrições</div></div>
-      </div>
-      <div id="torn-lista-admin"></div>
-    </div><!-- /page-eventos -->
 
     <!-- ── EXPORTAÇÃO ── -->
     <div id="page-exportar-dados" class="page">
@@ -1192,53 +1155,57 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">👥</div>
           <div style="font-weight:700;font-size:15px;margin-bottom:4px">Sócios</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Nome, nº, categoria, estado, contactos, morada, NIF, datas</div>
-          <button class="btn btn-accent" onclick="exportarSocios()" style="width:100%">⬇️ Exportar Sócios</button>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista completa de sócios com todos os dados</div>
+          <button class="btn btn-accent" onclick="exportarSociosPDF()" style="width:100%;margin-bottom:8px">📄 PDF Sócios</button>
+          <button class="btn btn-outline" onclick="exportarSociosXLSX()" style="width:100%;font-size:12px">📊 Excel</button>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">💰</div>
           <div style="font-weight:700;font-size:15px;margin-bottom:4px">Quotas</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Todas as quotas por sócio, ano, valor, estado e data de pagamento</div>
-          <button class="btn btn-accent" onclick="exportarQuotas()" style="width:100%">⬇️ Exportar Quotas</button>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista de quotas por sócio, ano, valor e estado</div>
+          <button class="btn btn-accent" onclick="exportarQuotasPDF()" style="width:100%;margin-bottom:8px">📄 PDF Quotas</button>
+          <button class="btn btn-outline" onclick="exportarQuotasXLSX()" style="width:100%;font-size:12px">📊 Excel</button>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">🧾</div>
           <div style="font-weight:700;font-size:15px;margin-bottom:4px">Recibos</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Todos os recibos emitidos com valor, sócio e data</div>
-          <button class="btn btn-accent" onclick="exportarRecibos()" style="width:100%">⬇️ Exportar Recibos</button>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Listagem de todos os recibos emitidos</div>
+          <button class="btn btn-accent" onclick="exportarRecibosPDF()" style="width:100%;margin-bottom:8px">📄 PDF Recibos</button>
+          <button class="btn btn-outline" onclick="exportarRecibosXLSX()" style="width:100%;font-size:12px">📊 Excel</button>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">💚</div>
           <div style="font-weight:700;font-size:15px;margin-bottom:4px">Receitas</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Todos os lançamentos de receita com conta SNC, meio e referência</div>
-          <button class="btn btn-green" onclick="exportarReceitas()" style="width:100%">⬇️ Exportar Receitas</button>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lançamentos de receita com conta SNC e meio</div>
+          <button class="btn btn-green" onclick="exportarReceitasPDF()" style="width:100%;margin-bottom:8px">📄 PDF Receitas</button>
+          <button class="btn btn-outline" onclick="exportarReceitasXLSX()" style="width:100%;font-size:12px">📊 Excel</button>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
           <div style="font-size:28px;margin-bottom:8px">🔴</div>
           <div style="font-weight:700;font-size:15px;margin-bottom:4px">Despesas</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Todos os lançamentos de despesa com conta SNC, fornecedor e meio</div>
-          <button class="btn btn-danger" onclick="exportarDespesas()" style="width:100%">⬇️ Exportar Despesas</button>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lançamentos de despesa com conta SNC e fornecedor</div>
+          <button class="btn btn-danger" onclick="exportarDespesasPDF()" style="width:100%;margin-bottom:8px">📄 PDF Despesas</button>
+          <button class="btn btn-outline" onclick="exportarDespesasXLSX()" style="width:100%;font-size:12px">📊 Excel</button>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:22px">
-          <div style="font-size:28px;margin-bottom:8px">🏆</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:4px">Eventos e Inscrições</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista de eventos e actividades da associação</div>
-          <button class="btn btn-accent" onclick="exportarEventos()" style="width:100%">⬇️ Exportar Eventos</button>
+          <div style="font-size:28px;margin-bottom:8px">⚖️</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px">Devedores</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Lista de sócios com quotas por pagar</div>
+          <button class="btn btn-accent" onclick="exportarDevoredoresPDF()" style="width:100%;margin-bottom:8px">📄 PDF Devedores</button>
         </div>
 
       </div>
-
       <!-- Backup completo -->
       <div style="background:var(--card);border:2px solid var(--accent);border-radius:14px;padding:24px">
         <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:200px">
             <div style="font-family:'Bebas Neue';font-size:22px;color:var(--accent);letter-spacing:1px;margin-bottom:4px">📦 Backup Completo</div>
-            <div style="font-size:13px;color:var(--text2)">Exporta <strong style="color:var(--text)">todos os dados</strong> num único ficheiro Excel com múltiplas folhas — Sócios, Quotas, Recibos, Receitas, Despesas, Acertos e Torneios.</div>
+            <div style="font-size:13px;color:var(--text2)">Exporta <strong style="color:var(--text)">todos os dados</strong> num único ficheiro Excel com múltiplas folhas — Sócios, Quotas, Recibos, Receitas, Despesas, Acertos e Eventos.</div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <select id="exp-ano-sel" style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;outline:none">
@@ -1372,7 +1339,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
           <option value="Danificado">Danificado</option>
           <option value="Abatido">Abatido</option>
         </select>
-        <button class="btn-secondary" onclick="exportarInventarioPDF()" style="margin-left:auto;">📄 PDF Inventário</button>
+        <button class="btn-secondary" onclick="exportarInventarioXLSX()" style="margin-left:auto;">📊 Excel Inventário</button>
       </div>
 
       <!-- KPIs -->
@@ -2024,54 +1991,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 </div>
 
 
-<!-- MODAL TORNEIO (admin) -->
-<div class="modal-overlay" id="modal-evento">
-  <div class="modal" style="max-width:560px">
-    <div class="modal-header">
-      <h3 id="modal-evento-title">Novo Evento</h3>
-      <button class="modal-close" onclick="closeModal('modal-evento')">✕</button>
-    </div>
-    <div class="modal-body" style="padding:20px 24px;">
-      <div class="form-grid">
-        <div class="form-group full"><label>Nome do Evento / Actividade</label>
-          <input id="t-nome" type="text" placeholder="Ex: Campeonato de Vizela 2026" />
-        </div>
-        <div class="form-group"><label>Tipo</label>
-          <input id="t-tipo" type="text" placeholder="Ex: Local, Nacional, Internacional..." />
-        </div>
-        <div class="form-group"><label>Local</label>
-          <input id="t-local" type="text" placeholder="Ex: Vizela — Pista Municipal" />
-        </div>
-        <div class="form-group"><label>Data de Início</label>
-          <input id="t-data" type="date" />
-        </div>
-        <div class="form-group"><label>Data de Término</label>
-          <input id="t-datafim" type="date" />
-        </div>
-        <div class="form-group"><label>Prazo de Inscrição</label>
-          <input id="t-prazo" type="date" />
-        </div>
-        <div class="form-group"><label>Vagas (0 = ilimitado)</label>
-          <input id="t-vagas" type="number" value="0" min="0" />
-        </div>
-        <div class="form-group"><label>Estado das Inscrições</label>
-          <select id="t-estado">
-            <option value="aberto">✅ Abertas</option>
-            <option value="fechado">🔒 Fechadas</option>
-            <option value="cancelado">❌ Cancelado</option>
-          </select>
-        </div>
-        <div class="form-group full"><label>Descrição / Informações</label>
-          <textarea id="t-desc" rows="3" placeholder="Regulamento, categorias, informações adicionais..."></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-evento')">Cancelar</button>
-      <button class="btn btn-accent" onclick="gravarEvento()">💾 Gravar</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL VER INSCRITOS (admin) -->
 <div class="modal-overlay" id="modal-inscritos">
@@ -2086,31 +2005,6 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modal-inscritos')">Fechar</button>
       <button class="btn btn-accent" id="btn-imprimir-inscritos" onclick="imprimirListaInscritos()" style="margin-left:8px">🖨️ Imprimir Lista</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL INSCRIÇÃO SÓCIO -->
-<div class="modal-overlay" id="modal-inscricao">
-  <div class="modal" style="max-width:460px">
-    <div class="modal-header">
-      <h3 id="modal-inscricao-title">Inscrição</h3>
-      <button class="modal-close" onclick="closeModal('modal-inscricao')">✕</button>
-    </div>
-    <div class="modal-body" style="padding:20px 24px;">
-      <div id="modal-inscricao-info" style="background:var(--bg2);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px"></div>
-      <div class="form-grid">
-        <div class="form-group full"><label>Categoria em que participa</label>
-          <input id="insc-categoria" type="text" placeholder="Ex: Homens, Seniores Masc., Veteranos..." />
-        </div>
-        <div class="form-group full"><label>Observações (opcional)</label>
-          <textarea id="insc-obs" rows="2" placeholder="Informações adicionais para o admin..."></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-inscricao')">Cancelar</button>
-      <button class="btn btn-accent" onclick="submeterInscricao()">🏆 Confirmar Inscrição</button>
     </div>
   </div>
 </div>
@@ -2166,9 +2060,14 @@ window._set = set;
 window._push = (r) => push(r);
 window._onValue = onValue;
 
-// Injetar logo nos elementos de UI
-document.getElementById('login-logo').src = LOGO_B64;
-document.getElementById('header-logo').src = LOGO_B64;
+// Injetar logo nos elementos de UI — aplicar imediatamente e também após load
+function aplicarLogo() {
+  const ids = ['login-logo','header-logo','socio-header-logo'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.src = LOGO_B64; });
+}
+aplicarLogo();
+document.addEventListener('DOMContentLoaded', aplicarLogo);
+window.addEventListener('load', aplicarLogo);
 
 // ─── ESTADO ───────────────────────────────────────
 const ADMIN_PASS = "ADMINISTRADOR2026***";
@@ -2316,7 +2215,7 @@ function renderAreaSocio() {
   carregarParticipacoesSocio(s.resultadosId);
 
   // Logo + nome header
-  document.getElementById('socio-header-logo').src = LOGO_B64;
+  aplicarLogo();
   document.getElementById('socio-badge-nome').textContent = s.nome?.split(' ')[0] || '';
 
   // Avatar iniciais
@@ -6097,297 +5996,336 @@ window.renderExportPage = function() {
   // Actualizar totais nos cards (não é necessário, mas podia mostrar contagens)
 };
 
-window.exportarSocios = async function() {
+
+
+// ─── UTILITÁRIO PDF LISTAGEM ──────────────────────────────────────────────
+async function getPDF() {
+  if (!window.jspdf) {
+    await new Promise((res,rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  return window.jspdf.jsPDF;
+}
+
+function gerarListagemPDF(titulo, cabecalho, linhas, nomeFicheiro, colunaLargurasRel) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  const cfg   = configuracoes || {};
+  const assoc = cfg.nome || 'Associação Musical e Recreativa Família Peixoto';
+  const nif   = cfg.nif  || '508 253 187';
+  const hoje  = new Date().toLocaleDateString('pt-PT');
+  const pw    = 277;
+  const marg  = 10;
+
+  doc.setFillColor(26, 58, 107);
+  doc.rect(0, 0, 297, 18, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.text(assoc, marg, 12);
+  doc.setFontSize(9);
+  doc.setFont('helvetica','normal');
+  doc.text('NIF ' + nif, 297 - marg, 8, {align:'right'});
+  doc.text(hoje, 297 - marg, 13, {align:'right'});
+
+  doc.setTextColor(26,58,107);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(14);
+  doc.text(titulo.toUpperCase(), marg, 28);
+
+  const total = colunaLargurasRel.reduce(function(a,b){return a+b;}, 0);
+  const larguras = colunaLargurasRel.map(function(r){return r * pw / total;});
+  let y = 34;
+
+  function desenharCabecalho() {
+    doc.setFillColor(26,58,107);
+    doc.rect(marg, y, pw, 7, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(7.5);
+    let x = marg;
+    cabecalho.forEach(function(col,i) {
+      doc.text(String(col), x + 1.5, y + 5);
+      x += larguras[i];
+    });
+    y += 7;
+  }
+
+  desenharCabecalho();
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
+  let par = false;
+  linhas.forEach(function(linha) {
+    if (y > 190) {
+      doc.addPage();
+      doc.setFillColor(26,58,107);
+      doc.rect(0,0,297,10,'F');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.text(titulo + ' (cont.)', marg, 7);
+      doc.text(hoje, 297-marg, 7, {align:'right'});
+      y = 14;
+      desenharCabecalho();
+      par = false;
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7);
+    }
+    if (par) { doc.setFillColor(240,244,250); doc.rect(marg,y,pw,5.5,'F'); }
+    doc.setTextColor(30,30,30);
+    let x = marg;
+    linha.forEach(function(cel,i) {
+      const txt = String(cel != null ? cel : '');
+      doc.text(txt, x + 1.5, y + 4, { maxWidth: larguras[i] - 3 });
+      x += larguras[i];
+    });
+    doc.setDrawColor(220,225,235);
+    doc.line(marg, y+5.5, marg+pw, y+5.5);
+    y += 5.5;
+    par = !par;
+  });
+
+  if (!linhas.length) {
+    doc.setTextColor(150,150,150);
+    doc.setFontSize(10);
+    doc.text('Sem registos.', marg, y + 10);
+  }
+
+  const np = doc.getNumberOfPages();
+  for (let p=1; p<=np; p++) {
+    doc.setPage(p);
+    doc.setFillColor(245,247,250);
+    doc.rect(0,202,297,8,'F');
+    doc.setTextColor(120,120,120);
+    doc.setFontSize(7);
+    doc.setFont('helvetica','normal');
+    doc.text('© ' + assoc + ' · Gerado em ' + hoje, marg, 207);
+    doc.text('Pág. ' + p + ' / ' + np, 297-marg, 207, {align:'right'});
+  }
+
+  doc.save(nomeFicheiro);
+}
+
+// ─── SÓCIOS ──────────────────────────────────────────────────────────────
+window.exportarSociosPDF = async function() {
+  try {
+    await getPDF();
+    const dados = Object.values(socios).sort(function(a,b){return Number(a.numero||0)-Number(b.numero||0);});
+    const linhas = dados.map(function(s){
+      return [s.numero||'', s.nome||'', s.categoria||'', s.estado||'', s.email||'', s.telefone||'', s.inscricao||''];
+    });
+    gerarListagemPDF('Lista de Sócios',
+      ['Nº','Nome','Categoria','Estado','Email','Telefone','Inscrição'],
+      linhas, 'Socios_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.pdf',
+      [4,28,12,8,22,12,10]);
+    toast('PDF gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
+};
+window.exportarSociosXLSX = async function() {
   try {
     const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar sócios...');
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, sociosParaLinhas()), 'Sócios');
-    baixarXLSX(XLSX, wb, `Socios_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    expMsg(`✅ ${Object.keys(socios).length} sócios exportados · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Sócios exportados ✅');
-  } catch(e) { toast('Erro na exportação: '+e.message,'error'); setExpProgress(0,''); }
+    baixarXLSX(XLSX, wb, 'Socios_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    toast('Excel gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
 };
+window.exportarSocios = window.exportarSociosPDF;
 
-window.exportarQuotas = async function() {
+// ─── QUOTAS ───────────────────────────────────────────────────────────────
+window.exportarQuotasPDF = async function() {
+  try {
+    await getPDF();
+    const ano = (document.getElementById('exp-ano-sel')||{}).value || '';
+    const dados = Object.values(quotas)
+      .filter(function(q){return !ano || String(q.ano)===ano;})
+      .sort(function(a,b){return String(a.ano).localeCompare(String(b.ano));});
+    const linhas = dados.map(function(q){
+      const s = socios[q.socioKey]||{};
+      return [s.numero||'', s.nome||q.socioNome||'', q.ano||'',
+              q.descricao||'Quota anual', parseFloat(q.valor||0).toFixed(2)+'€',
+              q.estado||'', q.dataPag||''];
+    });
+    const nf = ano ? 'Quotas_'+ano+'_FamiliaPeixoto.pdf' : 'Quotas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.pdf';
+    gerarListagemPDF(ano ? 'Quotas '+ano : 'Quotas',
+      ['Nº','Nome Sócio','Ano','Descrição','Valor','Estado','Data Pag.'],
+      linhas, nf, [4,26,6,22,8,10,10]);
+    toast('PDF gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
+};
+window.exportarQuotasXLSX = async function() {
   try {
     const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar quotas...');
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, quotasParaLinhas()), 'Quotas');
-    baixarXLSX(XLSX, wb, `Quotas_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    expMsg(`✅ ${Object.keys(quotas).length} quotas exportadas · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Quotas exportadas ✅');
+    baixarXLSX(XLSX, wb, 'Quotas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    toast('Excel gerado ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
+window.exportarQuotas = window.exportarQuotasPDF;
 
-window.exportarRecibos = async function() {
+// ─── RECIBOS ──────────────────────────────────────────────────────────────
+window.exportarRecibosPDF = async function() {
+  try {
+    await getPDF();
+    const ano = (document.getElementById('exp-ano-sel')||{}).value || '';
+    const dados = Object.values(recibos)
+      .filter(function(r){return !ano || (r.data||'').startsWith(ano);})
+      .sort(function(a,b){return (a.data||'').localeCompare(b.data||'');});
+    const linhas = dados.map(function(r){
+      return [r.numero||'', r.socioNome||'', r.descricao||'',
+              parseFloat(r.valor||0).toFixed(2)+'€', r.data||''];
+    });
+    const nf = ano ? 'Recibos_'+ano+'_FamiliaPeixoto.pdf' : 'Recibos_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.pdf';
+    gerarListagemPDF(ano ? 'Recibos '+ano : 'Recibos',
+      ['Nº Recibo','Sócio','Descrição','Valor','Data'],
+      linhas, nf, [8,28,32,10,10]);
+    toast('PDF gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
+};
+window.exportarRecibosXLSX = async function() {
   try {
     const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar recibos...');
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, recibosParaLinhas()), 'Recibos');
-    baixarXLSX(XLSX, wb, `Recibos_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    expMsg(`✅ ${Object.keys(recibos).length} recibos exportados · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Recibos exportados ✅');
+    baixarXLSX(XLSX, wb, 'Recibos_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    toast('Excel gerado ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
+window.exportarRecibos = window.exportarRecibosPDF;
 
-window.exportarReceitas = async function() {
+// ─── RECEITAS ─────────────────────────────────────────────────────────────
+window.exportarReceitasPDF = async function() {
+  try {
+    await getPDF();
+    const ano = (document.getElementById('exp-ano-sel')||{}).value || '';
+    const dados = Object.values(receitas)
+      .filter(function(r){return !ano || (r.data||'').startsWith(ano);})
+      .sort(function(a,b){return (a.data||'').localeCompare(b.data||'');});
+    const linhas = dados.map(function(r){
+      return [r.data||'', r.descricao||'', r.categoria||'',
+              r.conta||'', parseFloat(r.valor||0).toFixed(2)+'€', r.meio||''];
+    });
+    const nf = ano ? 'Receitas_'+ano+'_FamiliaPeixoto.pdf' : 'Receitas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.pdf';
+    gerarListagemPDF(ano ? 'Receitas '+ano : 'Receitas',
+      ['Data','Descrição','Categoria','Conta SNC','Valor','Meio'],
+      linhas, nf, [10,32,16,10,10,10]);
+    toast('PDF gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
+};
+window.exportarReceitasXLSX = async function() {
   try {
     const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar receitas...');
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, receitasParaLinhas()), 'Receitas');
-    baixarXLSX(XLSX, wb, `Receitas_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    expMsg(`✅ ${Object.keys(receitas).length} receitas exportadas · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Receitas exportadas ✅');
+    baixarXLSX(XLSX, wb, 'Receitas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    toast('Excel gerado ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
+window.exportarReceitas = window.exportarReceitasPDF;
 
-window.exportarDespesas = async function() {
+// ─── DESPESAS ─────────────────────────────────────────────────────────────
+window.exportarDespesasPDF = async function() {
+  try {
+    await getPDF();
+    const ano = (document.getElementById('exp-ano-sel')||{}).value || '';
+    const dados = Object.values(despesas)
+      .filter(function(d){return !ano || (d.data||'').startsWith(ano);})
+      .sort(function(a,b){return (a.data||'').localeCompare(b.data||'');});
+    const linhas = dados.map(function(d){
+      return [d.data||'', d.descricao||'', d.categoria||'',
+              d.conta||'', parseFloat(d.valor||0).toFixed(2)+'€', d.fornecedor||'', d.meio||''];
+    });
+    const nf = ano ? 'Despesas_'+ano+'_FamiliaPeixoto.pdf' : 'Despesas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.pdf';
+    gerarListagemPDF(ano ? 'Despesas '+ano : 'Despesas',
+      ['Data','Descrição','Categoria','Conta SNC','Valor','Fornecedor','Meio'],
+      linhas, nf, [10,28,14,10,10,14,10]);
+    toast('PDF gerado ✅');
+  } catch(e) { toast('Erro: '+e.message,'error'); }
+};
+window.exportarDespesasXLSX = async function() {
   try {
     const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar despesas...');
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, despesasParaLinhas()), 'Despesas');
-    baixarXLSX(XLSX, wb, `Despesas_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    expMsg(`✅ ${Object.keys(despesas).length} despesas exportadas · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Despesas exportadas ✅');
+    baixarXLSX(XLSX, wb, 'Despesas_FamiliaPeixoto_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    toast('Excel gerado ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
+window.exportarDespesas = window.exportarDespesasPDF;
 
-window.exportarEventos = async function() {
+// ─── DEVEDORES ────────────────────────────────────────────────────────────
+window.exportarDevoredoresPDF = async function() {
   try {
-    const XLSX = await getXLSX();
-    setExpProgress(50, 'A preparar torneios...');
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Eventos');
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, inscricoesParaLinhas()), 'Inscrições');
-    baixarXLSX(XLSX, wb, `Eventos_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
-    setExpProgress(100, 'Exportado!');
-    toast('Torneios exportados ✅');
+    await getPDF();
+    const anoAtual = String(new Date().getFullYear());
+    const sociosList = Object.values(socios)
+      .filter(function(s){return s.estado==='Ativo' && ['Benemérito','Honorário'].indexOf(s.categoria||'')<0;})
+      .sort(function(a,b){return Number(a.numero||0)-Number(b.numero||0);});
+    const linhas = [];
+    sociosList.forEach(function(s) {
+      const qSocio = Object.values(quotas).filter(function(q){
+        const soc = socios[q.socioKey]||{};
+        return String(soc.numero) === String(s.numero);
+      });
+      const pago = qSocio.some(function(q){return String(q.ano)===anoAtual && q.estado==='pago';});
+      if (!pago) {
+        const divida = qSocio.filter(function(q){return q.estado!=='pago';})
+          .reduce(function(a,q){return a+parseFloat(q.valor||0);},0);
+        linhas.push([s.numero||'', s.nome||'', s.categoria||'', s.email||'', s.telefone||'',
+                     divida>0 ? divida.toFixed(2)+'€' : '—']);
+      }
+    });
+    gerarListagemPDF('Devedores '+anoAtual,
+      ['Nº','Nome','Categoria','Email','Telefone','Dívida'],
+      linhas, 'Devedores_'+anoAtual+'_FamiliaPeixoto.pdf',
+      [4,28,14,22,12,10]);
+    toast('PDF com '+linhas.length+' devedores ✅');
   } catch(e) { toast('Erro: '+e.message,'error'); }
 };
 
+// ─── BACKUP COMPLETO (Excel) ──────────────────────────────────────────────
 window.exportarTudo = async function() {
   try {
     const XLSX  = await getXLSX();
-    const ano   = document.getElementById('exp-ano-sel')?.value || '';
-    const sufAno = ano ? `_${ano}` : '';
+    const ano   = (document.getElementById('exp-ano-sel')||{}).value || '';
+    const sufAno = ano ? '_'+ano : '';
     const prog  = document.getElementById('exp-progress');
     if (prog) prog.style.display = 'block';
-
-    setExpProgress(10, 'A preparar sócios...');
+    setExpProgress(10,'A preparar sócios...');
     const wb = XLSX.utils.book_new();
-    await new Promise(r=>setTimeout(r,50));
-
-    setExpProgress(20, 'Folha Sócios...');
+    await new Promise(function(r){setTimeout(r,50);});
+    setExpProgress(20,'Folha Sócios...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, sociosParaLinhas()), 'Sócios');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(35, 'Folha Quotas...');
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(35,'Folha Quotas...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, quotasParaLinhas(ano)), 'Quotas');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(50, 'Folha Recibos...');
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(50,'Folha Recibos...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, recibosParaLinhas(ano)), 'Recibos');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(62, 'Folha Receitas...');
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(62,'Folha Receitas...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, receitasParaLinhas(ano)), 'Receitas');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(74, 'Folha Despesas...');
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(74,'Folha Despesas...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, despesasParaLinhas(ano)), 'Despesas');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(84, 'Folha Acertos...');
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(88,'Folha Acertos...');
     XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, acertosParaLinhas(ano)), 'Acertos');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(92, 'Folha Eventos...');
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, torneiosParaLinhas()), 'Eventos');
-    XLSX.utils.book_append_sheet(wb, criarSheet(XLSX, inscricoesParaLinhas()), 'Inscrições');
-    await new Promise(r=>setTimeout(r,30));
-
-    setExpProgress(98, 'A gerar ficheiro...');
-    const nome = `Backup_FamiliaPeixoto${sufAno}_${new Date().toISOString().slice(0,10)}.xlsx`;
-    baixarXLSX(XLSX, wb, nome);
-
-    setExpProgress(100, 'Exportação concluída!');
-    const totalReg = Object.keys(socios).length + Object.keys(quotas).length + Object.keys(recibos).length +
-                     Object.keys(receitas).length + Object.keys(despesas).length;
-    expMsg(`✅ Backup completo — ${totalReg} registos em 8 folhas · ${new Date().toLocaleTimeString('pt-PT')}`);
-    toast('Backup completo exportado ✅');
-  } catch(e) {
-    toast('Erro na exportação: ' + e.message, 'error');
-    setExpProgress(0, 'Erro: ' + e.message);
-  }
+    await new Promise(function(r){setTimeout(r,30);});
+    setExpProgress(96,'A gerar ficheiro...');
+    baixarXLSX(XLSX, wb, 'BackupCompleto_FamiliaPeixoto'+sufAno+'_'+new Date().toISOString().slice(0,10)+'.xlsx');
+    setExpProgress(100,'Concluído!');
+    expMsg('✅ Backup completo exportado · '+new Date().toLocaleTimeString('pt-PT'));
+    toast('Backup Excel exportado ✅');
+  } catch(e) { toast('Erro no backup: '+e.message,'error'); setExpProgress(0,''); }
 };
 
-// ── FICHA DO SÓCIO ─────────────────────────────────
-let fichaKey = null;
-
-window.abrirFicha = function(key) {
-  fichaKey = key;
-  const s = socios[key];
-  if (!s) return;
-
-  // Configurar botões do footer
-  document.getElementById('ficha-btn-editar').onclick = () => { closeModal('modal-ficha'); editarSocio(key); };
-  document.getElementById('ficha-btn-quota').onclick  = () => { closeModal('modal-ficha'); abrirModalQuota(key); };
-  document.getElementById('ficha-btn-aviso').onclick  = () => gerarAvisoCobranca(key);
-  document.getElementById('ficha-btn-email-aviso').onclick = () => enviarAvisoEmail(key);
-  document.getElementById('ficha-btn-email-cartao').onclick = () => enviarCartaoPorEmail(key);
-  document.getElementById('ficha-btn-cartao').onclick = () => gerarCartaoSocio(key);
-
-  // Calcular dados
-  const anoAtual    = new Date().getFullYear().toString();
-  const minhasQ     = Object.entries(quotas).filter(([,q]) => q.socioKey === key);
-  const meusRec     = Object.entries(recibos).filter(([,r]) => r.socioKey === key);
-  const minhasInsc  = Object.entries(inscricoes||{}).filter(([,i]) => i.socioKey === key);
-  const quotaAtual  = minhasQ.find(([,q]) => String(q.ano) === anoAtual);
-  const qEstado     = quotaAtual?.[1]?.estado || 'pendente';
-  const totalPago   = minhasQ.filter(([,q])=>q.estado==='pago').reduce((a,[,q])=>a+parseFloat(q.valor||0),0);
-  const divida      = minhasQ.filter(([,q])=>q.estado!=='pago').reduce((a,[,q])=>a+parseFloat(q.valor||0),0);
-
-  document.getElementById('modal-ficha-title').textContent = `👤 ${s.nome} — Nº ${s.numero||'—'}`;
-
-  // Mostrar/ocultar botão aviso
-  document.getElementById('ficha-btn-aviso').style.display = qEstado !== 'pago' ? 'inline-flex' : 'none';
-  const emailAvisoBtn = document.getElementById('ficha-btn-email-aviso');
-  if (emailAvisoBtn) {
-    emailAvisoBtn.style.display = 'inline-flex'; // sempre visível
-    emailAvisoBtn.disabled = !s.email;
-    emailAvisoBtn.title = s.email ? 'Enviar aviso por email' : 'Sócio sem email registado';
-  }
-
-  const secTitle = (t, cor) => `<div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:${cor||'var(--accent)'};padding:16px 20px 8px;border-top:1px solid var(--border2)">${t}</div>`;
-  const infoRow  = (l, v, mono) => v ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 20px;border-bottom:1px solid var(--border2);font-size:13px"><span style="color:var(--text2)">${l}</span><span style="${mono?'font-family:DM Mono,monospace;':''}font-weight:500">${v}</span></div>` : '';
-
-  // Cor estado quota
-  const corQ = qEstado==='pago'?'var(--green)':qEstado==='parcial'?'var(--accent)':'var(--red)';
-  const lblQ = qEstado==='pago'?'✅ Paga':qEstado==='parcial'?'⚠️ Parcial':'❌ Pendente';
-
-  let html = '';
-
-  // ── Hero ──
-  const fotoHtml = s.foto
-    ? `<img src="${s.foto}" style="width:68px;height:86px;border-radius:6px;object-fit:cover;flex-shrink:0;border:2px solid var(--accent)">`
-    : `<div style="width:68px;height:86px;border-radius:6px;background:var(--bg3);border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">👤</div>`;
-
-  html += `<div style="background:linear-gradient(135deg,var(--bg2),var(--bg3));padding:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    ${fotoHtml}
-    <div style="width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:#000;flex-shrink:0;display:none">
-      ${(s.nome||'?').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()}
-    </div>
-    <div style="flex:1;min-width:180px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);letter-spacing:1px">${s.nome||'—'}</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:2px">Nº ${s.numero||'—'} · ${s.categoria||'—'} · ${s.estado||'—'}</div>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <div style="text-align:center;background:var(--bg);border-radius:8px;padding:10px 14px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:${corQ}">${lblQ}</div>
-        <div style="font-size:10px;color:var(--text2)">Quota ${anoAtual}</div>
-      </div>
-      <div style="text-align:center;background:var(--bg);border-radius:8px;padding:10px 14px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--green)">${totalPago.toFixed(0)}€</div>
-        <div style="font-size:10px;color:var(--text2)">Total pago</div>
-      </div>
-      ${divida > 0 ? `<div style="text-align:center;background:var(--bg);border-radius:8px;padding:10px 14px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red)">${divida.toFixed(0)}€</div>
-        <div style="font-size:10px;color:var(--text2)">Em dívida</div>
-      </div>` : ''}
-    </div>
-  </div>`;
-
-  // ── Dados pessoais ──
-  html += secTitle('Dados Pessoais');
-  html += infoRow('Nome completo', s.nome);
-  html += infoRow('Nº Sócio', s.numero, true);
-  html += infoRow('Categoria', s.categoria);
-  html += infoRow('Estado', s.estado);
-  html += infoRow('Data de Nascimento', s.nascimento);
-  html += infoRow('Data de Inscrição', s.inscricao);
-  html += infoRow('NIF', s.nif, true);
-  html += infoRow('Email', s.email);
-  html += infoRow('Telefone', s.telefone);
-  html += infoRow('Morada', s.morada);
-  if (s.obs) html += infoRow('Observações', s.obs);
-
-  // ── Quotas ──
-  html += secTitle(`Quotas (${minhasQ.length})`);
-  if (!minhasQ.length) {
-    html += '<div style="padding:12px 20px;font-size:12px;color:var(--text2)">Sem quotas registadas</div>';
-  } else {
-    html += '<div style="padding:0 20px">';
-    minhasQ.sort((a,b)=>b[1].ano-a[1].ano).forEach(([k,q]) => {
-      const est = q.estado||'pendente';
-      const cor = est==='pago'?'var(--green)':est==='parcial'?'var(--accent)':'var(--red)';
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2)">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);min-width:44px">${q.ano}</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:500">${q.descricao||'Quota anual'}</div>
-          <div style="font-size:11px;color:var(--text2)">${q.dataPag?'Pago em '+q.dataPag:''}</div>
-        </div>
-        <div style="font-weight:700;font-size:13px">${Number(q.valor||0).toFixed(2)} €</div>
-        <span style="font-size:11px;font-weight:700;color:${cor};background:rgba(0,0,0,.2);padding:3px 8px;border-radius:20px">${est}</span>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  // ── Recibos ──
-  html += secTitle(`Recibos (${meusRec.length})`);
-  if (!meusRec.length) {
-    html += '<div style="padding:12px 20px;font-size:12px;color:var(--text2)">Sem recibos emitidos</div>';
-  } else {
-    html += '<div style="padding:0 20px">';
-    meusRec.sort((a,b)=>(b[1].data||'').localeCompare(a[1].data||'')).forEach(([k,r]) => {
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2)">
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);min-width:48px">${r.numero||'—'}</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:500">${r.descricao||'—'}</div>
-          <div style="font-size:11px;color:var(--text2)">${r.data||'—'}</div>
-        </div>
-        <div style="font-weight:700;font-size:13px;color:var(--green)">+${Number(r.valor||0).toFixed(2)} €</div>
-        <button onclick="emitirRecibo('${k}','direct')" style="background:transparent;border:1px solid var(--border2);color:var(--text2);padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px">🧾</button>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  // ── Eventos / Inscrições ──
-  if (minhasInsc.length) {
-    html += secTitle(`Inscrições em Eventos (${minhasInsc.length})`);
-    html += '<div style="padding:0 20px">';
-    minhasInsc.forEach(([k,i]) => {
-      const cor = i.estado==='confirmado'?'var(--green)':i.estado==='rejeitado'?'var(--red)':'var(--accent)';
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2)">
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:500">${i.torneioNome||'—'}</div>
-          <div style="font-size:11px;color:var(--text2)">${i.categoria||''}</div>
-        </div>
-        <span style="font-size:11px;font-weight:700;color:${cor};background:rgba(0,0,0,.2);padding:3px 8px;border-radius:20px">${i.estado||'pendente'}</span>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  // ── Rodapé ──
-  html += `<div style="padding:12px 20px;font-size:11px;color:var(--text2);text-align:center">
-    Ficha gerada em ${new Date().toLocaleDateString('pt-PT')} · Família Peixoto Portal Associativo
-  </div>`;
-
-  document.getElementById('modal-ficha-content').innerHTML = html;
-  openModal('modal-ficha');
-};
 
 // ── LISTAGEM GERAL DE SÓCIOS ─────────────────────
 window.imprimirListagemSocios = function() {
@@ -8824,240 +8762,24 @@ function confirmarApagarEmp(key) {
 }
 
 // ── PDF INVENTÁRIO ──
-async function exportarInventarioPDF() {
-  // Carregar jsPDF
-  if (!window.jspdf) {
-    await new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      s.onload = resolve; s.onerror = reject;
-      document.head.appendChild(s);
+async function exportarInventarioXLSX() {
+  try {
+    if (!window.XLSX) await new Promise(r => { const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; s.onload=r; document.head.appendChild(s); });
+    const wb = window.XLSX.utils.book_new();
+    const rows = [['Código','Descrição','Categoria','Quantidade','Unidade','Valor Unit.','Valor Total','Estado','Localização','Observações']];
+    Object.values(inventario||{}).forEach(i => {
+      rows.push([i.codigo||'',i.descricao||'',i.categoria||'',i.quantidade||0,i.unidade||'',
+        parseFloat(i.valorUnit||0).toFixed(2), (parseFloat(i.quantidade||0)*parseFloat(i.valorUnit||0)).toFixed(2),
+        i.estado||'',i.localizacao||'',i.obs||'']);
     });
-  }
-  if (!window.jspdf) { toast('Erro ao carregar PDF', 'error'); return; }
-  const { jsPDF } = window.jspdf;
-
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-  const W = 297; const H = 210;
-  const hoje = new Date().toLocaleDateString('pt-PT');
-  const empQtd = getEmpQtd();
-
-  // ── Cabeçalho ──
-  doc.setFillColor(10, 22, 40);
-  doc.rect(0, 0, W, 22, 'F');
-  doc.setFillColor(212, 130, 10);
-  doc.rect(0, 22, W, 1, 'F');
-
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(212, 130, 10);
-  doc.text('FAMÍLIA PEIXOTO', 14, 10);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(180, 160, 120);
-  doc.text('Associação de Minigolfe de Vizela', 14, 16);
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  doc.text('Inventário de Equipamento e Material', W / 2, 13, { align: 'center' });
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(150, 130, 90);
-  doc.text('Gerado em ' + hoje, W - 14, 10, { align: 'right' });
-
-  // ── Tabela manual ──
-  const arts = Object.entries(_inv).sort((a, b) => (a[1].nome || '').localeCompare(b[1].nome || ''));
-
-  // Cabeçalho da tabela
-  let y = 30;
-  const cols = [
-    { label: 'Artigo',       x: 14,  w: 65 },
-    { label: 'Categoria',    x: 79,  w: 38 },
-    { label: 'Qtd Total',    x: 117, w: 22 },
-    { label: 'Disponível',   x: 139, w: 22 },
-    { label: 'Estado',       x: 161, w: 28 },
-    { label: 'Valor (€)',    x: 189, w: 24 },
-    { label: 'Aquisição',    x: 213, w: 26 },
-    { label: 'Descrição',    x: 239, w: 54 },
-  ];
-
-  // Header row
-  doc.setFillColor(10, 22, 40);
-  doc.rect(14, y, W - 28, 8, 'F');
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(212, 130, 10);
-  cols.forEach(c => doc.text(c.label, c.x + 2, y + 5.5));
-  y += 8;
-
-  // Linhas
-  if (!arts.length) {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(120, 100, 60);
-    doc.text('Sem artigos registados no inventário', W / 2, y + 10, { align: 'center' });
-  } else {
-    arts.forEach(([key, a], i) => {
-      if (y > H - 25) {
-        doc.addPage('a4', 'landscape');
-        y = 20;
-        // Re-header
-        doc.setFillColor(10, 22, 40);
-        doc.rect(14, y, W - 28, 8, 'F');
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(212, 130, 10);
-        cols.forEach(c => doc.text(c.label, c.x + 2, y + 5.5));
-        y += 8;
-      }
-
-      const disp = Number(a.qtd || 0) - (empQtd[key] || 0);
-      const rowH = 7;
-      const bg = i % 2 === 0 ? [250, 247, 240] : [255, 255, 255];
-      doc.setFillColor(...bg);
-      doc.rect(14, y, W - 28, rowH, 'F');
-
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(30, 30, 30);
-
-      const truncate = (str, maxW) => {
-        if (!str) return '—';
-        const s = String(str);
-        return doc.getTextWidth(s) * 8 / 10 > maxW ? s.substring(0, Math.floor(maxW / 2)) + '...' : s;
-      };
-
-      doc.text(truncate(a.nome, 60), cols[0].x + 2, y + 4.8);
-      doc.text(truncate(a.categoria, 34), cols[1].x + 2, y + 4.8);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text(String(a.qtd || 0), cols[2].x + 11, y + 4.8, { align: 'center' });
-
-      doc.setTextColor(disp > 0 ? 46 : 231, disp > 0 ? 140 : 76, disp > 0 ? 60 : 60);
-      doc.text(String(disp), cols[3].x + 11, y + 4.8, { align: 'center' });
-      doc.setTextColor(30, 30, 30);
-
-      doc.setFont('helvetica', 'normal');
-      const estadoCor = { Bom: [46,140,60], Usado: [180,140,20], Danificado: [200,60,60], Abatido: [120,120,120] };
-      const ec = estadoCor[a.estado] || [100,100,100];
-      doc.setTextColor(...ec);
-      doc.text(a.estado || '—', cols[4].x + 2, y + 4.8);
-      doc.setTextColor(30, 30, 30);
-
-      doc.text(a.valor ? Number(a.valor).toFixed(2) : '—', cols[5].x + 2, y + 4.8);
-      doc.text(a.dataAquisicao || '—', cols[6].x + 2, y + 4.8);
-      doc.text(truncate(a.desc, 50), cols[7].x + 2, y + 4.8);
-
-      // Linha separadora
-      doc.setDrawColor(220, 210, 190);
-      doc.setLineWidth(0.2);
-      doc.line(14, y + rowH, W - 14, y + rowH);
-      y += rowH;
-    });
-  }
-
-  // ── Totais ──
-  y += 4;
-  doc.setFillColor(10, 22, 40);
-  doc.rect(14, y, W - 28, 8, 'F');
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(212, 130, 10);
-  const totalArtigos = arts.length;
-  const totalQtd = arts.reduce((s, [, a]) => s + Number(a.qtd || 0), 0);
-  const totalDisp = arts.reduce((s, [key, a]) => s + Number(a.qtd || 0) - (empQtd[key] || 0), 0);
-  const totalVal = arts.reduce((s, [, a]) => s + (a.valor ? Number(a.valor) : 0), 0);
-  doc.text(`Total: ${totalArtigos} artigos · ${totalQtd} unidades · ${totalDisp} disponíveis · Valor total: ${totalVal.toFixed(2)} €`, 16, y + 5.5);
-
-  // ── Página 2 — Empréstimos activos ──
-  const ativos = Object.entries(_emp).filter(([, e]) => !e.devolvido);
-  if (ativos.length) {
-    doc.addPage('a4', 'landscape');
-
-    doc.setFillColor(10, 22, 40);
-    doc.rect(0, 0, W, 22, 'F');
-    doc.setFillColor(212, 130, 10);
-    doc.rect(0, 22, W, 1, 'F');
-    doc.setFontSize(13);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text('Empréstimos Activos', W / 2, 13, { align: 'center' });
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(150, 130, 90);
-    doc.text('Gerado em ' + hoje, W - 14, 10, { align: 'right' });
-
-    y = 30;
-    const cols2 = [
-      { label: 'Artigo',          x: 14,  w: 60 },
-      { label: 'Qtd',             x: 74,  w: 16 },
-      { label: 'Sócio / Membro',  x: 90,  w: 60 },
-      { label: 'Contacto',        x: 150, w: 45 },
-      { label: 'Saída',           x: 195, w: 26 },
-      { label: 'Dev. Prevista',   x: 221, w: 26 },
-      { label: 'Estado',          x: 247, w: 28 },
-      { label: 'Obs',             x: 275, w: 20 },
-    ];
-
-    doc.setFillColor(10, 22, 40);
-    doc.rect(14, y, W - 28, 8, 'F');
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(212, 130, 10);
-    cols2.forEach(c => doc.text(c.label, c.x + 2, y + 5.5));
-    y += 8;
-
-    const hojeISO = new Date().toISOString().split('T')[0];
-    ativos.forEach(([, e], i) => {
-      const art = _inv[e.artigoId];
-      const atr = e.dataDev < hojeISO;
-      const rowH = 7;
-      const bg = i % 2 === 0 ? [250, 247, 240] : [255, 255, 255];
-      doc.setFillColor(...bg);
-      doc.rect(14, y, W - 28, rowH, 'F');
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(30, 30, 30);
-      doc.text(String(art?.nome || '—').substring(0, 30), cols2[0].x + 2, y + 4.8);
-      doc.text(String(e.qtd || 1), cols2[1].x + 8, y + 4.8, { align: 'center' });
-      doc.text(String(e.socio || '—').substring(0, 28), cols2[2].x + 2, y + 4.8);
-      doc.text(String(e.contacto || '—').substring(0, 20), cols2[3].x + 2, y + 4.8);
-      doc.text(e.dataSaida || '—', cols2[4].x + 2, y + 4.8);
-      doc.setTextColor(atr ? 200 : 30, atr ? 60 : 30, 30);
-      doc.text(e.dataDev || '—', cols2[5].x + 2, y + 4.8);
-      doc.setTextColor(atr ? 200 : 46, atr ? 60 : 140, atr ? 60 : 60);
-      doc.setFont('helvetica', 'bold');
-      doc.text(atr ? 'ATRASADO' : 'Activo', cols2[6].x + 2, y + 4.8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(30, 30, 30);
-      doc.text(String(e.obs || '').substring(0, 10), cols2[7].x + 2, y + 4.8);
-      doc.setDrawColor(220, 210, 190);
-      doc.line(14, y + rowH, W - 14, y + rowH);
-      y += rowH;
-    });
-  }
-
-  // ── Rodapé ──
-  const pageCount = doc.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFillColor(10, 22, 40);
-    doc.rect(0, H - 10, W, 10, 'F');
-    doc.setFontSize(7);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(120, 100, 60);
-    doc.text('© Rui Gonçalves · Família Peixoto — Associação de Minigolfe de Vizela', 14, H - 3.5);
-    doc.setTextColor(212, 130, 10);
-    doc.text('Pág. ' + i + ' / ' + pageCount, W - 14, H - 3.5, { align: 'right' });
-  }
-
-  doc.save('Família Peixoto_Inventario_' + new Date().toISOString().split('T')[0] + '.pdf');
-  toast('PDF gerado ✅');
+    const ws = window.XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:10},{wch:35},{wch:15},{wch:10},{wch:10},{wch:12},{wch:12},{wch:12},{wch:18},{wch:25}];
+    window.XLSX.utils.book_append_sheet(wb, ws, 'Inventário');
+    window.XLSX.writeFile(wb, `Inventario_FamiliaPeixoto_${new Date().toISOString().slice(0,10)}.xlsx`);
+    toast('Inventário exportado ✅');
+  } catch(e) { toast('Erro ao exportar: '+e.message,'error'); }
 }
-
-
-window.exportarInventarioPDF = exportarInventarioPDF;
-
+window.exportarInventarioXLSX = exportarInventarioXLSX;
 // ── INVENTÁRIO — window exports ──
 window.abrirModalArtigo = abrirModalArtigo;
 window.abrirEditArtigo = abrirEditArtigo;
