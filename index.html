@@ -2780,6 +2780,15 @@ window.renderSocios = function() {
     return matchQ && matchC && matchE;
   });
 
+  // FIX 3: Ordenar por número de sócio (numérico, especiais no fim)
+  lista.sort(([,a],[,b]) => {
+    const na = parseInt(a.numero), nb = parseInt(b.numero);
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    if (!isNaN(na)) return -1;
+    if (!isNaN(nb)) return 1;
+    return String(a.numero).localeCompare(String(b.numero));
+  });
+
   if (!lista.length) { tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="icon">👥</div><p>Nenhum sócio encontrado</p></div></td></tr>'; return; }
 
   tbody.innerHTML = lista.map(([k,s]) => `<tr>
@@ -3008,7 +3017,9 @@ window.abrirModalQuota = function(socioKey, quotaKey='') {
   document.getElementById('q-data').value = new Date().toISOString().slice(0,10);
   // valor da quota baseado no tipo de sócio (dinâmico)
   const tipoSocio = tiposSocio.find(t => t.nome === s?.categoria);
-  const val = tipoSocio?.quota ? String(tipoSocio.quota) : '';
+  // FIX 5: Benemérito e Honorário têm quota 0
+  const catIsenta = ['Benemérito','Honorário','Ben','Ben2'].includes(s?.categoria||'');
+  const val = catIsenta ? '0' : (tipoSocio?.quota ? String(tipoSocio.quota) : '');
   document.getElementById('q-valor').value = val;
   document.getElementById('q-desc').value = `Quota anual ${s?.categoria||''} ${new Date().getFullYear()}`;
   document.getElementById('q-estado').value = 'pago';
