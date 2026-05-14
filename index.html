@@ -517,6 +517,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
     <div class="nav-group">
       
       <button class="nav-tab" onclick="showPage('eventos')">📅 Eventos</button>
+      <button class="nav-tab" onclick="showPage('valencias')">🎵 Valências</button>
       <button class="nav-tab" onclick="showPage('exportar-dados')">📤 Exportar</button>
     </div>
     <div class="nav-sep"></div>
@@ -1580,7 +1581,141 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
       </div>
     </div>
 
+    <!-- ── VALÊNCIAS ── -->
+    <div id="page-valencias" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="font-family:'Bebas Neue';font-size:28px;color:var(--accent);letter-spacing:2px">🎵 Valências</h2>
+          <p style="font-size:13px;color:var(--text2);margin-top:2px">Gere as valências musicais e as suas saídas</p>
+        </div>
+        <button class="btn btn-accent" onclick="valAbrirModalValencia()">+ Nova Valência</button>
+      </div>
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card"><div class="val" id="val-kpi-total" style="font-size:32px">—</div><div class="lbl">Valências</div></div>
+        <div class="stat-card"><div class="val" id="val-kpi-saidas" style="font-size:32px;color:var(--blue)">—</div><div class="lbl">Total Saídas</div></div>
+        <div class="stat-card"><div class="val" id="val-kpi-feitas" style="font-size:32px;color:var(--green)">—</div><div class="lbl">Realizadas</div></div>
+        <div class="stat-card"><div class="val" id="val-kpi-pendentes" style="font-size:32px;color:var(--accent)">—</div><div class="lbl">Pendentes</div></div>
+      </div>
+      <div id="val-lista-valencias" style="display:flex;flex-direction:column;gap:16px">
+        <div style="text-align:center;padding:40px;color:var(--text2)">A carregar...</div>
+      </div>
+    </div><!-- /page-valencias -->
+
   </main>
+</div>
+
+<!-- MODAL NOVA/EDITAR VALÊNCIA -->
+<div class="modal-overlay" id="modal-valencia" style="display:none">
+  <div class="modal" style="max-width:500px;width:95%">
+    <div class="modal-header">
+      <h3 id="modal-valencia-title">Nova Valência</h3>
+      <button class="modal-close" onclick="closeModal('modal-valencia')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px;display:flex;flex-direction:column;gap:14px">
+      <div class="form-group">
+        <label>Nome da Valência *</label>
+        <input type="text" id="val-nome" placeholder="Ex: Fanfarra, Bombos, Cavaquinhos..." />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Ano de Fundação</label>
+          <input type="number" id="val-ano" placeholder="Ex: 2003" min="1900" max="2099" />
+        </div>
+        <div class="form-group">
+          <label>Cor de Identificação</label>
+          <input type="color" id="val-cor" value="#d4820a" style="height:42px;padding:4px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;cursor:pointer;width:100%" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="val-desc" rows="3" placeholder="Breve descrição da valência..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border2)">
+      <button class="btn-sec" onclick="closeModal('modal-valencia')">Cancelar</button>
+      <button class="btn-prim" onclick="valGravarValencia()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOVA/EDITAR SAÍDA -->
+<div class="modal-overlay" id="modal-saida-val" style="display:none">
+  <div class="modal" style="max-width:540px;width:95%">
+    <div class="modal-header">
+      <h3 id="modal-saida-val-title">Nova Saída</h3>
+      <button class="modal-close" onclick="closeModal('modal-saida-val')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px;display:flex;flex-direction:column;gap:14px">
+      <input type="hidden" id="saida-val-valencia-key" />
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Data *</label>
+          <input type="date" id="saida-val-data" />
+        </div>
+        <div class="form-group">
+          <label>Horário</label>
+          <select id="saida-val-horario">
+            <option value="">— seleccionar —</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noite">Noite</option>
+            <option value="Dia inteiro">Dia inteiro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nome / Local *</label>
+        <input type="text" id="saida-val-nome" placeholder="Ex: Festas de Vizela — Vizela" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="saida-val-estado">
+            <option value="Pendente">⏳ Pendente</option>
+            <option value="Feito">✅ Feito</option>
+            <option value="Anulada">🚫 Anulada</option>
+            <option value="Cancelada">❌ Cancelada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cachê (€)</label>
+          <input type="number" id="saida-val-cache" placeholder="0.00" min="0" step="0.01" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Observações</label>
+        <textarea id="saida-val-obs" rows="2" placeholder="Notas adicionais..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border2)">
+      <button class="btn-sec" onclick="closeModal('modal-saida-val')">Cancelar</button>
+      <button class="btn-prim" onclick="valGravarSaida()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MEMBROS DA VALÊNCIA -->
+<div class="modal-overlay" id="modal-val-membros" style="display:none">
+  <div class="modal" style="max-width:640px;width:95%">
+    <div class="modal-header">
+      <h3 id="modal-val-membros-title">Membros da Valência</h3>
+      <button class="modal-close" onclick="closeModal('modal-val-membros')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px">
+      <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <select id="val-membros-sel" style="flex:1;min-width:200px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px">
+          <option value="">— seleccionar sócio para adicionar —</option>
+        </select>
+        <button class="btn btn-accent" onclick="valAdicionarMembro()" style="white-space:nowrap">➕ Adicionar</button>
+      </div>
+      <div id="val-membros-lista" style="display:flex;flex-direction:column;gap:8px;max-height:380px;overflow-y:auto">
+        <div style="text-align:center;padding:30px;color:var(--text2)">A carregar...</div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:16px 24px;border-top:1px solid var(--border2);display:flex;justify-content:flex-end">
+      <button class="btn-sec" onclick="closeModal('modal-val-membros')">Fechar</button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL SECRETARIA: CONVOCATÓRIA / ATA / PRESENÇA -->
@@ -8932,4 +9067,429 @@ if(_origSP) {
 
 
 window._switchLoginTab = window.switchLoginTab || function(){};
+
+// ══════════════════════════════════════════════════════════════
+// ── MÓDULO VALÊNCIAS ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+(function() {
+  // ── Estado local ──────────────────────────────────────────
+  let valDados    = {};   // { key: { nome, ano, cor, desc } }
+  let valSaidas   = {};   // { valKey: { saidaKey: {...} } }
+  let valMembros  = {};   // { valKey: { socioKey: true } }
+  let valSocios   = {};   // espelho de /portal/socios
+  let _valEditKey = null; // valência em edição
+  let _saidaEditKey = null;
+  let _saidaValKey  = null;
+  let _membrosValKey = null;
+  let _valListeners = []; // unsubscribers Firebase
+
+  // ── Utilitários ───────────────────────────────────────────
+  const fmtData = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('pt-PT') : '—';
+  const estadoCor = { Feito:'var(--green)', Pendente:'var(--accent)', Anulada:'var(--text2)', Cancelada:'var(--red)' };
+  const estadoIcon = { Feito:'✅', Pendente:'⏳', Anulada:'🚫', Cancelada:'❌' };
+
+  // ── Inicialização: arranca listeners quando a página é aberta ──
+  function valInit() {
+    // Sócios (para o selector de membros)
+    const rSocios = ref(db, '/portal/socios');
+    const unsubSoc = onValue(rSocios, snap => { valSocios = snap.exists() ? snap.val() : {}; });
+    _valListeners.push(unsubSoc);
+
+    // Valências
+    const rVal = ref(db, '/peixoto/valencias');
+    const unsubVal = onValue(rVal, snap => {
+      valDados = {};
+      valSaidas = {};
+      valMembros = {};
+      if (snap.exists()) {
+        snap.forEach(vSnap => {
+          const k = vSnap.key;
+          const v = vSnap.val();
+          valDados[k]   = { nome: v.nome||'', ano: v.ano||'', cor: v.cor||'#d4820a', desc: v.desc||'' };
+          valSaidas[k]  = v.saidas   || {};
+          valMembros[k] = v.membros  || {};
+        });
+      }
+      valRenderLista();
+      valAtualizarKPIs();
+    });
+    _valListeners.push(unsubVal);
+  }
+
+  // ── KPIs ──────────────────────────────────────────────────
+  function valAtualizarKPIs() {
+    const total = Object.keys(valDados).length;
+    let totalSaidas = 0, feitas = 0, pendentes = 0;
+    Object.keys(valSaidas).forEach(vk => {
+      Object.values(valSaidas[vk]).forEach(s => {
+        totalSaidas++;
+        if (s.estado === 'Feito') feitas++;
+        if (s.estado === 'Pendente' || !s.estado) pendentes++;
+      });
+    });
+    document.getElementById('val-kpi-total').textContent     = total;
+    document.getElementById('val-kpi-saidas').textContent    = totalSaidas;
+    document.getElementById('val-kpi-feitas').textContent    = feitas;
+    document.getElementById('val-kpi-pendentes').textContent = pendentes;
+  }
+
+  // ── Render lista de valências ──────────────────────────────
+  function valRenderLista() {
+    const el = document.getElementById('val-lista-valencias');
+    if (!el) return;
+    const keys = Object.keys(valDados);
+    if (!keys.length) {
+      el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text2)"><div style="font-size:48px;margin-bottom:12px">🎵</div><p>Nenhuma valência criada ainda.<br>Clica em <strong>+ Nova Valência</strong> para começar.</p></div>';
+      return;
+    }
+    el.innerHTML = keys.map(vk => {
+      const v = valDados[vk];
+      const saidas = Object.entries(valSaidas[vk] || {}).sort((a,b) => (a[1].data||'').localeCompare(b[1].data||''));
+      const nMembros = Object.keys(valMembros[vk] || {}).length;
+      const nSaidas  = saidas.length;
+      const nFeitas  = saidas.filter(([,s]) => s.estado === 'Feito').length;
+      const cor = v.cor || '#d4820a';
+
+      // Tabela de saídas
+      const tabelaSaidas = saidas.length
+        ? `<table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr style="color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px">
+                <th style="padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2)">Data</th>
+                <th style="padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2)">Horário</th>
+                <th style="padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2)">Nome / Local</th>
+                <th style="padding:8px 10px;text-align:center;border-bottom:1px solid var(--border2)">Estado</th>
+                <th style="padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2)">Cachê</th>
+                <th style="padding:8px 10px;text-align:center;border-bottom:1px solid var(--border2)">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${saidas.map(([sk, s]) => `
+                <tr style="border-bottom:1px solid var(--border2)">
+                  <td style="padding:9px 10px">${fmtData(s.data)}</td>
+                  <td style="padding:9px 10px;color:var(--text2)">${s.horario||'—'}</td>
+                  <td style="padding:9px 10px;font-weight:500">${s.nome||'—'}${s.obs?`<br><span style="font-size:11px;color:var(--text2)">${s.obs}</span>`:''}</td>
+                  <td style="padding:9px 10px;text-align:center">
+                    <span style="font-size:12px;font-weight:600;color:${estadoCor[s.estado]||'var(--text2)'}">
+                      ${estadoIcon[s.estado]||''} ${s.estado||'—'}
+                    </span>
+                  </td>
+                  <td style="padding:9px 10px;text-align:right;color:var(--text2)">${s.cache ? parseFloat(s.cache).toFixed(2)+'€' : '—'}</td>
+                  <td style="padding:9px 10px;text-align:center;white-space:nowrap">
+                    <button onclick="valEditarSaida('${vk}','${sk}')" style="background:none;border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;margin-right:4px" title="Editar">✏️</button>
+                    <button onclick="valApagarSaida('${vk}','${sk}')" style="background:none;border:1px solid rgba(231,76,60,.3);color:var(--red);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px" title="Apagar">🗑️</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>`
+        : `<div style="text-align:center;padding:30px;color:var(--text2);font-size:13px">Nenhuma saída registada ainda.</div>`;
+
+      return `
+        <div style="background:var(--card);border:1px solid var(--border2);border-radius:14px;overflow:hidden;border-top:3px solid ${cor}">
+          <!-- Cabeçalho da valência -->
+          <div style="padding:18px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:44px;height:44px;border-radius:10px;background:${cor}22;border:2px solid ${cor};display:flex;align-items:center;justify-content:center;font-size:22px">🎵</div>
+              <div>
+                <div style="font-size:18px;font-weight:700;color:var(--text)">${v.nome}</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:2px">
+                  ${v.ano ? `Fundada em ${v.ano} · ` : ''}${nMembros} membro(s) · ${nSaidas} saída(s) · ${nFeitas} realizada(s)
+                  ${v.desc ? `<br><span style="font-style:italic">${v.desc}</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button onclick="valAbrirMembros('${vk}')" style="background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500">👥 Membros</button>
+              <button onclick="valAbrirModalSaida('${vk}')" style="background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500">➕ Saída</button>
+              <button onclick="valPdfValencia('${vk}')" style="background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500">📄 PDF</button>
+              <button onclick="valEditarValencia('${vk}')" style="background:var(--bg2);border:1px solid var(--border2);color:var(--text2);padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12px" title="Editar valência">✏️</button>
+              <button onclick="valApagarValencia('${vk}')" style="background:none;border:1px solid rgba(231,76,60,.3);color:var(--red);padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12px" title="Apagar valência">🗑️</button>
+            </div>
+          </div>
+          <!-- Tabela de saídas -->
+          <div style="border-top:1px solid var(--border2);overflow-x:auto">
+            ${tabelaSaidas}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── MODAL VALÊNCIA — Abrir/Gravar/Editar/Apagar ───────────
+  window.valAbrirModalValencia = function() {
+    _valEditKey = null;
+    document.getElementById('modal-valencia-title').textContent = 'Nova Valência';
+    document.getElementById('val-nome').value = '';
+    document.getElementById('val-ano').value  = '';
+    document.getElementById('val-cor').value  = '#d4820a';
+    document.getElementById('val-desc').value = '';
+    openModal('modal-valencia');
+  };
+
+  window.valEditarValencia = function(key) {
+    _valEditKey = key;
+    const v = valDados[key];
+    document.getElementById('modal-valencia-title').textContent = 'Editar Valência';
+    document.getElementById('val-nome').value = v.nome || '';
+    document.getElementById('val-ano').value  = v.ano  || '';
+    document.getElementById('val-cor').value  = v.cor  || '#d4820a';
+    document.getElementById('val-desc').value = v.desc || '';
+    openModal('modal-valencia');
+  };
+
+  window.valGravarValencia = async function() {
+    const nome = document.getElementById('val-nome').value.trim();
+    if (!nome) { toast('O nome da valência é obrigatório', 'error'); return; }
+    const dados = {
+      nome,
+      ano:  document.getElementById('val-ano').value.trim(),
+      cor:  document.getElementById('val-cor').value,
+      desc: document.getElementById('val-desc').value.trim(),
+    };
+    try {
+      if (_valEditKey) {
+        await update(ref(db, `/peixoto/valencias/${_valEditKey}`), dados);
+        toast('Valência actualizada ✅');
+      } else {
+        await push(ref(db, '/peixoto/valencias'), dados);
+        toast('Valência criada ✅');
+      }
+      closeModal('modal-valencia');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  window.valApagarValencia = async function(key) {
+    const v = valDados[key];
+    if (!confirm(`Apagar a valência "${v.nome}" e todas as suas saídas e membros?`)) return;
+    try {
+      await remove(ref(db, `/peixoto/valencias/${key}`));
+      toast('Valência removida');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  // ── MODAL SAÍDA — Abrir/Gravar/Editar/Apagar ─────────────
+  window.valAbrirModalSaida = function(valKey) {
+    _saidaValKey  = valKey;
+    _saidaEditKey = null;
+    const vNome = valDados[valKey] ? valDados[valKey].nome : '';
+    document.getElementById('modal-saida-val-title').textContent = `Nova Saída — ${vNome}`;
+    document.getElementById('saida-val-valencia-key').value = valKey;
+    document.getElementById('saida-val-data').value    = '';
+    document.getElementById('saida-val-horario').value = '';
+    document.getElementById('saida-val-nome').value    = '';
+    document.getElementById('saida-val-estado').value  = 'Pendente';
+    document.getElementById('saida-val-cache').value   = '';
+    document.getElementById('saida-val-obs').value     = '';
+    openModal('modal-saida-val');
+  };
+
+  window.valEditarSaida = function(valKey, saidaKey) {
+    _saidaValKey  = valKey;
+    _saidaEditKey = saidaKey;
+    const s = (valSaidas[valKey] || {})[saidaKey] || {};
+    const vNome = valDados[valKey] ? valDados[valKey].nome : '';
+    document.getElementById('modal-saida-val-title').textContent = `Editar Saída — ${vNome}`;
+    document.getElementById('saida-val-valencia-key').value = valKey;
+    document.getElementById('saida-val-data').value    = s.data    || '';
+    document.getElementById('saida-val-horario').value = s.horario || '';
+    document.getElementById('saida-val-nome').value    = s.nome    || '';
+    document.getElementById('saida-val-estado').value  = s.estado  || 'Pendente';
+    document.getElementById('saida-val-cache').value   = s.cache   || '';
+    document.getElementById('saida-val-obs').value     = s.obs     || '';
+    openModal('modal-saida-val');
+  };
+
+  window.valGravarSaida = async function() {
+    const valKey = document.getElementById('saida-val-valencia-key').value;
+    const nome   = document.getElementById('saida-val-nome').value.trim();
+    const data   = document.getElementById('saida-val-data').value;
+    if (!nome || !data) { toast('Data e Nome/Local são obrigatórios', 'error'); return; }
+    const dados = {
+      data,
+      horario: document.getElementById('saida-val-horario').value,
+      nome,
+      estado:  document.getElementById('saida-val-estado').value,
+      cache:   parseFloat(document.getElementById('saida-val-cache').value) || 0,
+      obs:     document.getElementById('saida-val-obs').value.trim(),
+    };
+    try {
+      if (_saidaEditKey) {
+        await update(ref(db, `/peixoto/valencias/${valKey}/saidas/${_saidaEditKey}`), dados);
+        toast('Saída actualizada ✅');
+      } else {
+        await push(ref(db, `/peixoto/valencias/${valKey}/saidas`), dados);
+        toast('Saída adicionada ✅');
+      }
+      closeModal('modal-saida-val');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  window.valApagarSaida = async function(valKey, saidaKey) {
+    if (!confirm('Apagar esta saída?')) return;
+    try {
+      await remove(ref(db, `/peixoto/valencias/${valKey}/saidas/${saidaKey}`));
+      toast('Saída removida');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  // ── MEMBROS DA VALÊNCIA ───────────────────────────────────
+  window.valAbrirMembros = function(valKey) {
+    _membrosValKey = valKey;
+    const v = valDados[valKey];
+    document.getElementById('modal-val-membros-title').textContent = `👥 Membros — ${v ? v.nome : ''}`;
+    // Popular selector com sócios que ainda não são membros
+    const jaMembs = Object.keys(valMembros[valKey] || {});
+    const sel = document.getElementById('val-membros-sel');
+    sel.innerHTML = '<option value="">— seleccionar sócio —</option>';
+    Object.entries(valSocios)
+      .filter(([sk]) => !jaMembs.includes(sk))
+      .sort((a,b) => (a[1].nome||'').localeCompare(b[1].nome||''))
+      .forEach(([sk, s]) => {
+        const opt = document.createElement('option');
+        opt.value = sk;
+        opt.textContent = `${s.nome||'?'} (Nº ${s.numero||'—'})`;
+        sel.appendChild(opt);
+      });
+    valRenderMembros(valKey);
+    openModal('modal-val-membros');
+  };
+
+  function valRenderMembros(valKey) {
+    const el = document.getElementById('val-membros-lista');
+    const membros = valMembros[valKey] || {};
+    const keys = Object.keys(membros);
+    if (!keys.length) {
+      el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2);font-size:13px">Nenhum membro associado ainda.</div>';
+      return;
+    }
+    el.innerHTML = keys.map(sk => {
+      const s = valSocios[sk] || {};
+      return `<div style="background:var(--bg2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:14px">${s.nome||'Sócio removido'}</div>
+          <div style="font-size:12px;color:var(--text2)">Nº ${s.numero||'—'} · ${s.categoria||'—'}</div>
+        </div>
+        <button onclick="valRemoverMembro('${valKey}','${sk}')" style="background:none;border:1px solid rgba(231,76,60,.3);color:var(--red);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px">🗑️ Remover</button>
+      </div>`;
+    }).join('');
+  }
+
+  window.valAdicionarMembro = async function() {
+    const sel = document.getElementById('val-membros-sel');
+    const socioKey = sel.value;
+    if (!socioKey) { toast('Selecciona um sócio', 'error'); return; }
+    try {
+      await set(ref(db, `/peixoto/valencias/${_membrosValKey}/membros/${socioKey}`), true);
+      // Atualizar local imediatamente
+      if (!valMembros[_membrosValKey]) valMembros[_membrosValKey] = {};
+      valMembros[_membrosValKey][socioKey] = true;
+      // Reabrir (atualiza selector e lista)
+      valAbrirMembros(_membrosValKey);
+      toast('Membro adicionado ✅');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  window.valRemoverMembro = async function(valKey, socioKey) {
+    if (!confirm('Remover este membro da valência?')) return;
+    try {
+      await remove(ref(db, `/peixoto/valencias/${valKey}/membros/${socioKey}`));
+      delete valMembros[valKey][socioKey];
+      valRenderMembros(valKey);
+      // Atualizar selector
+      const s = valSocios[socioKey] || {};
+      const opt = document.createElement('option');
+      opt.value = socioKey;
+      opt.textContent = `${s.nome||'?'} (Nº ${s.numero||'—'})`;
+      document.getElementById('val-membros-sel').appendChild(opt);
+      toast('Membro removido');
+    } catch(e) { toast('Erro: ' + e.message, 'error'); }
+  };
+
+  // ── PDF — Lista de saídas por valência ───────────────────
+  window.valPdfValencia = function(valKey) {
+    const v = valDados[valKey];
+    const saidas = Object.entries(valSaidas[valKey] || {})
+      .sort((a,b) => (a[1].data||'').localeCompare(b[1].data||''));
+    const membros = Object.keys(valMembros[valKey] || {}).map(sk => {
+      const s = valSocios[sk] || {};
+      return `${s.nome||'?'} (Nº ${s.numero||'—'})`;
+    }).sort();
+
+    const cor = v.cor || '#d4820a';
+    const dataGeracao = new Date().toLocaleDateString('pt-PT', { year:'numeric', month:'long', day:'numeric' });
+
+    const linhasSaidas = saidas.map(([,s], i) => `
+      <tr style="background:${i%2===0?'#fff':'#f9f9f9'}">
+        <td style="padding:8px 10px;border-bottom:1px solid #eee">${fmtData(s.data)}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #eee">${s.horario||'—'}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #eee;font-weight:500">${s.nome||'—'}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #eee;text-align:center;font-weight:600;color:${s.estado==='Feito'?'#27ae60':s.estado==='Cancelada'||s.estado==='Anulada'?'#e74c3c':'#e67e22'}">${estadoIcon[s.estado]||''} ${s.estado||'—'}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #eee;text-align:right">${s.cache ? parseFloat(s.cache).toFixed(2)+'€' : '—'}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #eee;font-size:11px;color:#666">${s.obs||''}</td>
+      </tr>`).join('');
+
+    const linhasMembros = membros.length
+      ? membros.map(m => `<li style="margin-bottom:4px;font-size:13px">${m}</li>`).join('')
+      : '<li style="color:#999">Nenhum membro associado</li>';
+
+    const html = `<!DOCTYPE html><html lang="pt"><head>
+      <meta charset="UTF-8">
+      <title>${v.nome} — Saídas 2026</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 30px; color: #1a1a1a; font-size: 13px; }
+        h1 { margin:0; font-size:26px; color:${cor}; letter-spacing:1px; }
+        h2 { font-size:13px; color:#444; margin:4px 0 0; font-weight:400; }
+        .header { border-bottom: 3px solid ${cor}; padding-bottom:16px; margin-bottom:24px; display:flex; align-items:flex-start; justify-content:space-between; }
+        .badge { background:${cor}22; border:2px solid ${cor}; padding:6px 14px; border-radius:8px; font-weight:700; color:${cor}; font-size:14px; }
+        table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+        th { background:${cor}; color:#fff; padding:9px 10px; text-align:left; font-size:12px; letter-spacing:.4px; }
+        .section-title { font-size:15px; font-weight:700; color:#333; border-left:4px solid ${cor}; padding-left:10px; margin:24px 0 10px; }
+        ul { margin:0; padding-left:20px; }
+        .footer { margin-top:40px; border-top:2px solid ${cor}; padding-top:12px; display:flex; justify-content:space-between; font-size:11px; color:#888; }
+        @media print { body { padding:15px; } }
+      </style>
+    </head><body>
+      <div class="header">
+        <div>
+          <h1>🎵 ${v.nome}</h1>
+          <h2>Associação Musical e Recreativa Família Peixoto</h2>
+          <h2 style="margin-top:4px">${v.ano ? `Fundada em ${v.ano}` : ''} ${v.desc ? '· '+v.desc : ''}</h2>
+        </div>
+        <div class="badge">Saídas 2026</div>
+      </div>
+
+      <div class="section-title">📅 Saídas Registadas (${saidas.length})</div>
+      ${saidas.length ? `<table>
+        <thead><tr>
+          <th>Data</th><th>Horário</th><th>Nome / Local</th><th style="text-align:center">Estado</th><th style="text-align:right">Cachê</th><th>Obs.</th>
+        </tr></thead>
+        <tbody>${linhasSaidas}</tbody>
+      </table>` : '<p style="color:#999">Nenhuma saída registada.</p>'}
+
+      <div class="section-title">👥 Membros da Valência (${membros.length})</div>
+      <ul>${linhasMembros}</ul>
+
+      <div class="footer">
+        <span>© Rui Gonçalves · Família Peixoto</span>
+        <span>Gerado em ${dataGeracao}</span>
+      </div>
+      <script>window.onload=function(){window.print();}<\/script>
+    </body></html>`;
+
+    const win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); }
+    else toast('Permite popups para gerar o PDF', 'error');
+  };
+
+  // ── Intercepção showPage para arrancar listeners ──────────
+  const _spOrig2 = window.showPage;
+  window.showPage = function(page) {
+    _spOrig2(page);
+    if (page === 'valencias') {
+      // Arrancar listeners se ainda não estiverem activos
+      if (_valListeners.length === 0) valInit();
+    }
+  };
+
+})(); // fim IIFE Valências
 </script>
