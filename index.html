@@ -9604,50 +9604,58 @@ window._switchLoginTab = window.switchLoginTab || function(){};
 // ── PDFs PREMIUM ──────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════
 (function() {
+// ══════════════════════════════════════════════════════════════
+// ── PDFs PREMIUM ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+(function() {
 
   function pdfCSS(ac) {
     ac = ac || '#0f1e35';
     return `<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
       *{box-sizing:border-box;margin:0;padding:0}
-      body{font-family:'DM Sans',Arial,sans-serif;color:#1a1a2e;font-size:12px;line-height:1.5;background:#fff}
-      @media print{body{padding:0}@page{margin:10mm;size:A4}#btn-print{display:none!important}}
-      .pdf-header{background:linear-gradient(135deg,${ac} 0%,#1a3a6b 100%);color:#fff;padding:22px 28px;display:flex;align-items:center;gap:18px}
-      .pdf-logo{width:56px;height:56px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.15);padding:4px;flex-shrink:0}
-      .pdf-header-text{flex:1}
-      .pdf-assoc{font-size:11px;opacity:.75;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
-      .pdf-nif{font-size:10px;opacity:.55;margin-bottom:6px}
-      .pdf-titulo{font-size:22px;font-weight:700;letter-spacing:1px}
-      .pdf-subtitulo{font-size:12px;opacity:.8;margin-top:3px}
-      .pdf-header-date{text-align:right;min-width:100px}
-      .pdf-date-label{font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:.5px}
-      .pdf-date-value{font-size:12px;font-weight:600;margin-top:2px}
-      .pdf-summary{background:#f4f7fb;border-bottom:3px solid ${ac};padding:12px 28px;display:flex;gap:28px;flex-wrap:wrap}
+      body{font-family:'DM Sans',Arial,sans-serif;color:#1a1a2e;font-size:12px;line-height:1.6;background:#fff}
+      @media print{body{padding:0}@page{margin:12mm;size:A4}#btn-print{display:none!important}.no-break{page-break-inside:avoid}}
+      .pdf-header{background:${ac};color:#fff;padding:24px 30px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden}
+      .pdf-header::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
+      .pdf-logo{width:60px;height:60px;object-fit:contain;border-radius:12px;background:rgba(255,255,255,.18);padding:6px;flex-shrink:0;position:relative;z-index:1}
+      .pdf-logo-ph{width:60px;height:60px;border-radius:12px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;position:relative;z-index:1}
+      .pdf-header-text{flex:1;position:relative;z-index:1}
+      .pdf-assoc{font-size:11px;opacity:.7;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px;font-weight:400}
+      .pdf-nif{font-size:10px;opacity:.5;margin-bottom:8px}
+      .pdf-titulo{font-size:24px;font-weight:700;letter-spacing:.5px;line-height:1.2}
+      .pdf-subtitulo{font-size:12px;opacity:.75;margin-top:4px;font-weight:400}
+      .pdf-header-badge{position:relative;z-index:1;text-align:right}
+      .pdf-date-label{font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+      .pdf-date-value{font-size:12px;font-weight:600;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;white-space:nowrap}
+      .pdf-summary{background:#f4f7fb;border-bottom:3px solid ${ac};padding:14px 30px;display:flex;gap:32px;flex-wrap:wrap;align-items:center}
       .pdf-stat{display:flex;flex-direction:column;gap:2px}
-      .pdf-stat-val{font-size:22px;font-weight:700;color:${ac}}
-      .pdf-stat-lbl{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.5px}
-      .pdf-section{padding:20px 28px}
-      .pdf-section-title{font-size:12px;font-weight:700;color:${ac};border-left:4px solid ${ac};padding-left:10px;margin-bottom:14px;letter-spacing:.6px;text-transform:uppercase}
+      .pdf-stat-val{font-size:26px;font-weight:700;line-height:1;color:${ac}}
+      .pdf-stat-lbl{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+      .pdf-section{padding:22px 30px}
+      .pdf-section-title{font-size:11px;font-weight:700;color:${ac};border-left:4px solid ${ac};padding:3px 0 3px 10px;margin-bottom:16px;letter-spacing:.8px;text-transform:uppercase}
       table{width:100%;border-collapse:collapse;font-size:11px}
       thead tr{background:${ac};color:#fff}
-      thead th{padding:9px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
-      tbody tr:nth-child(even){background:#f9fbfd}
-      tbody td{padding:8px 10px;border-bottom:1px solid #e8eef6;vertical-align:top}
-      .val-card{border:1px solid #dde;border-radius:10px;margin-bottom:20px;overflow:hidden}
-      .val-card-header{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee}
-      .val-card-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-      .val-card-nome{font-size:15px;font-weight:700;color:#1a1a2e}
-      .val-card-info{font-size:11px;color:#666;margin-top:3px}
-      .val-card-membros{padding:12px 18px;background:#f9fbfd;border-bottom:1px solid #eee;display:flex;flex-wrap:wrap;gap:6px}
-      .membro-pill{background:#fff;border:1px solid #dde;border-radius:20px;padding:3px 10px;font-size:11px;color:#444}
-      .ev-card{background:#fff;border:1px solid #dde;border-radius:10px;margin-bottom:14px;overflow:hidden}
-      .ev-card-top{padding:14px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid #eee}
-      .ev-nome{font-size:14px;font-weight:700;color:#1a1a2e}
-      .ev-meta{font-size:11px;color:#666;margin-top:4px;display:flex;gap:12px;flex-wrap:wrap}
-      .ev-estado{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;white-space:nowrap}
-      .ev-desc{padding:10px 18px;font-size:11px;color:#555;line-height:1.6}
-      .pdf-footer{background:#f4f7fb;border-top:2px solid ${ac};padding:10px 28px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#888;margin-top:20px}
-      #btn-print{position:fixed;bottom:20px;right:20px;background:${ac};color:#fff;border:none;border-radius:50px;padding:13px 26px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:999;letter-spacing:.5px}
+      thead th{padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+      tbody tr:nth-child(even){background:#f6f9fd}
+      tbody td{padding:9px 12px;border-bottom:1px solid #e8eef6;vertical-align:top}
+      .val-card{border:1px solid #e0e6ef;border-radius:12px;margin-bottom:22px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+      .val-card-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:2px solid #f0f0f0}
+      .val-card-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+      .val-card-nome{font-size:16px;font-weight:700;color:#1a1a2e}
+      .val-card-info{font-size:11px;color:#777;margin-top:3px}
+      .val-card-membros{padding:12px 20px;background:#f9fbfd;border-bottom:1px solid #eee;display:flex;flex-wrap:wrap;gap:7px}
+      .membro-pill{background:#fff;border:1px solid #dde;border-radius:20px;padding:4px 12px;font-size:11px;color:#444;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+      .ev-card{background:#fff;border:1px solid #e0e6ef;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+      .ev-card-accent{height:4px}
+      .ev-card-top{padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+      .ev-nome{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:5px}
+      .ev-meta{font-size:11px;color:#777;display:flex;gap:14px;flex-wrap:wrap;line-height:1.8}
+      .ev-estado{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;white-space:nowrap;align-self:flex-start}
+      .ev-desc{padding:10px 20px 14px;font-size:11px;color:#666;line-height:1.7;border-top:1px solid #f0f0f0;background:#fafbfd}
+      .pdf-footer{background:#f4f7fb;border-top:3px solid ${ac};padding:12px 30px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#999;margin-top:24px}
+      .pdf-footer strong{color:#555;font-size:11px}
+      #btn-print{position:fixed;bottom:24px;right:24px;background:${ac};color:#fff;border:none;border-radius:50px;padding:14px 28px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:999;letter-spacing:.5px;font-family:'DM Sans',sans-serif}
     </style>`;
   }
 
@@ -9658,14 +9666,14 @@ window._switchLoginTab = window.switchLoginTab || function(){};
     const nif  = cfg.nif  || '508 253 187';
     const hoje = new Date().toLocaleDateString('pt-PT', { year:'numeric', month:'long', day:'numeric' });
     return `<div class="pdf-header">
-      ${logo ? `<img src="${logo}" alt="" class="pdf-logo">` : `<div style="width:56px;height:56px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🎵</div>`}
+      ${logo ? `<img src="${logo}" alt="" class="pdf-logo">` : `<div class="pdf-logo-ph">🎵</div>`}
       <div class="pdf-header-text">
         <div class="pdf-assoc">${nome}</div>
         <div class="pdf-nif">NIF ${nif}</div>
         <div class="pdf-titulo">${titulo}</div>
         ${subtitulo ? `<div class="pdf-subtitulo">${subtitulo}</div>` : ''}
       </div>
-      <div class="pdf-header-date">
+      <div class="pdf-header-badge">
         <div class="pdf-date-label">Gerado em</div>
         <div class="pdf-date-value">${hoje}</div>
       </div>
@@ -9675,7 +9683,11 @@ window._switchLoginTab = window.switchLoginTab || function(){};
   function pdfFooter(extra) {
     const cfg  = window.configuracoes || {};
     const nome = cfg.nome || 'Associação Musical e Recreativa Família Peixoto';
-    return `<div class="pdf-footer"><span>${nome}</span><span>${extra||''}</span><span>© Rui Gonçalves</span></div>`;
+    return `<div class="pdf-footer">
+      <strong>${nome}</strong>
+      <span>${extra||''}</span>
+      <span>© Rui Gonçalves</span>
+    </div>`;
   }
 
   function abrirPdf(html) {
@@ -9689,49 +9701,51 @@ window._switchLoginTab = window.switchLoginTab || function(){};
 
   // ── PDF GERAL EVENTOS ─────────────────────────────────────
   window.pdfGeralEventos = function() {
-    const evts = Object.entries(window.torneios || {}).sort((a,b)=>(a[1].data||'').localeCompare(b[1].data||''));
+    // torneios é let no scope do ficheiro — aceder directamente (não window.torneios)
+    const _torneios   = typeof torneios   !== 'undefined' ? torneios   : {};
+    const _inscricoes = typeof inscricoes !== 'undefined' ? inscricoes : {};
+    const evts = Object.entries(_torneios).sort((a,b)=>(a[1].data||'').localeCompare(b[1].data||''));
+    if (!evts.length) { if(window.toast) toast('Nenhum evento para exportar — abre o separador Eventos primeiro', 'error'); return; }
     const corE = { aberto:'#27ae60', fechado:'#e67e22', cancelado:'#e74c3c', realizado:'#3498db' };
-    const icnE = { aberto:'✅', fechado:'🔒', cancelado:'❌', realizado:'🏁' };
+    const icnE = { aberto:'✅ Aberto', fechado:'🔒 Fechado', cancelado:'❌ Cancelado', realizado:'🏁 Realizado' };
     const total = evts.length;
     const ab = evts.filter(([,e])=>e.estado==='aberto').length;
     const re = evts.filter(([,e])=>e.estado==='realizado').length;
     const ca = evts.filter(([,e])=>e.estado==='cancelado').length;
-
+    const fe = evts.filter(([,e])=>e.estado==='fechado').length;
+    const ac = '#0f2147';
     const cards = evts.map(([k,e]) => {
       const cor = corE[e.estado]||'#999';
-      const inscs = Object.values(window.inscricoes||{}).filter(i=>i.torneioKey===k);
-      return `<div class="ev-card">
+      const inscs = Object.values(_inscricoes).filter(i=>i.torneioKey===k);
+      const conf  = inscs.filter(i=>i.estado==='confirmado').length;
+      return `<div class="ev-card no-break">
+        <div class="ev-card-accent" style="background:${cor}"></div>
         <div class="ev-card-top">
           <div style="flex:1">
             <div class="ev-nome">${e.nome||'—'}</div>
             <div class="ev-meta">
-              ${e.data ? `<span>📅 ${fmtData(e.data)}${e.datafim?' → '+fmtData(e.datafim):''}</span>` : ''}
+              ${e.data  ? `<span>📅 <strong>${fmtData(e.data)}</strong>${e.datafim&&e.datafim!==e.data?' → '+fmtData(e.datafim):''}</span>` : ''}
               ${e.local ? `<span>📍 ${e.local}</span>` : ''}
-              ${e.tipo  ? `<span>🏷️ ${e.tipo}</span>`  : ''}
+              ${e.tipo  ? `<span>🏷️ ${e.tipo}</span>` : ''}
               ${e.prazo ? `<span>⏰ Prazo: ${fmtData(e.prazo)}</span>` : ''}
-              ${e.vagas ? `<span>👥 Vagas: ${e.vagas}</span>` : ''}
-              <span>📝 ${inscs.length} inscrição(ões)</span>
+              ${e.vagas ? `<span>👥 ${conf}/${e.vagas} vagas</span>` : inscs.length ? `<span>📝 ${inscs.length} inscrit${inscs.length===1?'o':'os'}</span>` : ''}
             </div>
           </div>
-          <div class="ev-estado" style="color:${cor};border-color:${cor}30;background:${cor}12">${icnE[e.estado]||''} ${e.estado||'—'}</div>
+          <div class="ev-estado" style="color:${cor};border-color:${cor}40;background:${cor}12">${icnE[e.estado]||e.estado||'—'}</div>
         </div>
         ${e.descricao ? `<div class="ev-desc">${e.descricao}</div>` : ''}
       </div>`;
     }).join('');
-
-    const ac = '#0f1e35';
     const html = `<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><title>Plano de Eventos</title>${pdfCSS(ac)}</head><body>
-    ${pdfHeader('Plano de Eventos', new Date().getFullYear() + ' — Todos os eventos e actividades', ac)}
+    ${pdfHeader('Plano de Eventos', new Date().getFullYear()+' — Eventos e actividades da associação', ac)}
     <div class="pdf-summary">
       <div class="pdf-stat"><div class="pdf-stat-val">${total}</div><div class="pdf-stat-lbl">Total</div></div>
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:#27ae60">${ab}</div><div class="pdf-stat-lbl">Em Aberto</div></div>
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:#3498db">${re}</div><div class="pdf-stat-lbl">Realizados</div></div>
+      <div class="pdf-stat"><div class="pdf-stat-val" style="color:#e67e22">${fe}</div><div class="pdf-stat-lbl">Fechados</div></div>
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:#e74c3c">${ca}</div><div class="pdf-stat-lbl">Cancelados</div></div>
     </div>
-    <div class="pdf-section">
-      <div class="pdf-section-title">📅 Eventos e Actividades</div>
-      ${cards || '<p style="color:#999;font-style:italic">Nenhum evento registado.</p>'}
-    </div>
+    <div class="pdf-section"><div class="pdf-section-title">📅 Eventos e Actividades</div>${cards}</div>
     ${pdfFooter('Uso interno — Secretaria')}
     <button id="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </body></html>`;
@@ -9745,56 +9759,53 @@ window._switchLoginTab = window.switchLoginTab || function(){};
     const vm = window._valMembrosExport || {};
     const vso= window._valSociosExport || {};
     const keys = Object.keys(vd);
-    if (!keys.length) { if(window.toast) toast('Nenhuma valência carregada', 'error'); return; }
-    const corEst = { Feito:'#27ae60', Pendente:'#e67e22', Anulada:'#999', Cancelada:'#e74c3c' };
+    if (!keys.length) { if(window.toast) toast('Nenhuma valência carregada — abre o separador Valências primeiro', 'error'); return; }
+    const corEst = { Feito:'#27ae60', Pendente:'#e67e22', Anulada:'#888', Cancelada:'#e74c3c' };
     const icnEst = { Feito:'✅', Pendente:'⏳', Anulada:'🚫', Cancelada:'❌' };
     const totalSaidas  = keys.reduce((a,k)=>a+Object.keys(vs[k]||{}).length,0);
     const totalFeitas  = keys.reduce((a,k)=>a+Object.values(vs[k]||{}).filter(s=>s.estado==='Feito').length,0);
     const totalMembros = keys.reduce((a,k)=>a+Object.keys(vm[k]||{}).length,0);
-
+    const ac = '#6B1A1A';
     const cards = keys.map(vk => {
-      const v = vd[vk]; const cor = v.cor||'#8B1A1A';
+      const v = vd[vk]; const cor = v.cor||'#6B1A1A';
       const saidas = Object.entries(vs[vk]||{}).sort((a,b)=>(a[1].data||'').localeCompare(b[1].data||''));
       const membros = Object.keys(vm[vk]||{}).map(sk=>{const s=vso[sk]||{};return s.nome?`${s.nome} (Nº ${s.numero||'—'})`:null;}).filter(Boolean).sort();
       const linhas = saidas.map(([,s])=>`<tr>
         <td style="white-space:nowrap">${fmtData(s.data)}</td>
         <td style="color:#666">${s.horario||'—'}</td>
         <td style="font-weight:500">${s.nome||'—'}${s.obs?`<br><span style="font-size:10px;color:#999">${s.obs}</span>`:''}</td>
-        <td style="text-align:center;font-weight:700;color:${corEst[s.estado]||'#999'}">${icnEst[s.estado]||''} ${s.estado||'—'}</td>
+        <td style="text-align:center;font-weight:700;color:${corEst[s.estado]||'#888'}">${icnEst[s.estado]||''} ${s.estado||'—'}</td>
         <td style="text-align:right">${s.cache&&parseFloat(s.cache)>0?parseFloat(s.cache).toFixed(2)+'€':'—'}</td>
       </tr>`).join('');
       const pills = membros.map(m=>`<span class="membro-pill">${m}</span>`).join('')||'<span style="color:#999;font-size:11px;font-style:italic">Sem membros</span>';
-      return `<div class="val-card" style="border-top:4px solid ${cor}">
-        <div class="val-card-header" style="background:${cor}08">
+      const nFeit = saidas.filter(([,s])=>s.estado==='Feito').length;
+      const nPend = saidas.filter(([,s])=>s.estado==='Pendente'||!s.estado).length;
+      return `<div class="val-card no-break" style="border-top:4px solid ${cor}">
+        <div class="val-card-header" style="background:${cor}0a">
           <div class="val-card-dot" style="background:${cor}"></div>
-          <div>
+          <div style="flex:1">
             <div class="val-card-nome">${v.nome}</div>
             <div class="val-card-info">${v.ano?`Fundada em ${v.ano} · `:''}${saidas.length} saída(s) · ${membros.length} membro(s)${v.desc?' · '+v.desc:''}</div>
           </div>
-          <div style="margin-left:auto;text-align:right;font-size:11px;color:#666">
-            <div><strong style="color:${cor}">${saidas.filter(([,s])=>s.estado==='Feito').length}</strong> realizadas</div>
-            <div>${saidas.filter(([,s])=>s.estado==='Pendente'||!s.estado).length} pendentes</div>
+          <div style="text-align:right;font-size:11px;color:#666">
+            <div><strong style="color:${cor};font-size:14px">${nFeit}</strong> realizadas</div>
+            <div>${nPend} pendentes</div>
           </div>
         </div>
         ${membros.length?`<div class="val-card-membros">${pills}</div>`:''}
-        ${saidas.length?`<table><thead><tr><th>Data</th><th>Horário</th><th>Nome / Local</th><th style="text-align:center">Estado</th><th style="text-align:right">Cachê</th></tr></thead><tbody>${linhas}</tbody></table>`
-          :`<div style="padding:14px 18px;color:#999;font-size:11px;font-style:italic">Nenhuma saída registada.</div>`}
+        ${saidas.length?`<table style="border-radius:0"><thead><tr><th>Data</th><th>Horário</th><th>Nome / Local</th><th style="text-align:center">Estado</th><th style="text-align:right">Cachê</th></tr></thead><tbody>${linhas}</tbody></table>`
+          :`<div style="padding:14px 20px;color:#999;font-size:11px;font-style:italic">Nenhuma saída registada.</div>`}
       </div>`;
     }).join('');
-
-    const ac = '#6B1A1A';
     const html = `<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><title>Valências — Relatório Geral</title>${pdfCSS(ac)}</head><body>
     ${pdfHeader('Valências Musicais — Relatório Geral', 'Saídas, membros e estatísticas · '+new Date().getFullYear(), ac)}
     <div class="pdf-summary">
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:${ac}">${keys.length}</div><div class="pdf-stat-lbl">Valências</div></div>
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:#3498db">${totalSaidas}</div><div class="pdf-stat-lbl">Total Saídas</div></div>
       <div class="pdf-stat"><div class="pdf-stat-val" style="color:#27ae60">${totalFeitas}</div><div class="pdf-stat-lbl">Realizadas</div></div>
-      <div class="pdf-stat"><div class="pdf-stat-val" style="color:#666">${totalMembros}</div><div class="pdf-stat-lbl">Total Membros</div></div>
+      <div class="pdf-stat"><div class="pdf-stat-val" style="color:#888">${totalMembros}</div><div class="pdf-stat-lbl">Total Membros</div></div>
     </div>
-    <div class="pdf-section">
-      <div class="pdf-section-title">🎵 Detalhe por Valência</div>
-      ${cards||'<p style="color:#999;font-style:italic">Nenhuma valência registada.</p>'}
-    </div>
+    <div class="pdf-section"><div class="pdf-section-title">🎵 Detalhe por Valência</div>${cards||'<p style="color:#999;font-style:italic">Nenhuma valência registada.</p>'}</div>
     ${pdfFooter('Uso interno — Secretaria')}
     <button id="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </body></html>`;
@@ -9807,31 +9818,29 @@ window._switchLoginTab = window.switchLoginTab || function(){};
     const vs = window._valSaidasExport || {};
     const vm = window._valMembrosExport || {};
     const vso= window._valSociosExport || {};
-    const v = vd[valKey]; if (!v) { if(window.toast) toast('Valência não encontrada', 'error'); return; }
+    const v = vd[valKey];
+    if (!v) { if(window.toast) toast('Valência não encontrada', 'error'); return; }
     const cor = v.cor || '#6B1A1A';
-    const corEst = { Feito:'#27ae60', Pendente:'#e67e22', Anulada:'#999', Cancelada:'#e74c3c' };
+    const corEst = { Feito:'#27ae60', Pendente:'#e67e22', Anulada:'#888', Cancelada:'#e74c3c' };
     const icnEst = { Feito:'✅', Pendente:'⏳', Anulada:'🚫', Cancelada:'❌' };
     const saidas = Object.entries(vs[valKey]||{}).sort((a,b)=>(a[1].data||'').localeCompare(b[1].data||''));
     const membros = Object.keys(vm[valKey]||{}).map(sk=>{const s=vso[sk]||{};return s.nome?{nome:s.nome,num:s.numero||'—',cat:s.categoria||'—'}:null;}).filter(Boolean).sort((a,b)=>a.nome.localeCompare(b.nome));
     const totalCache = saidas.reduce((a,[,s])=>a+(parseFloat(s.cache)||0),0);
     const nFeitas = saidas.filter(([,s])=>s.estado==='Feito').length;
     const nPend   = saidas.filter(([,s])=>s.estado==='Pendente'||!s.estado).length;
-
     const linhasSaidas = saidas.map(([,s])=>`<tr>
       <td style="white-space:nowrap">${fmtData(s.data)}</td>
       <td style="color:#666;white-space:nowrap">${s.horario||'—'}</td>
       <td style="font-weight:500">${s.nome||'—'}${s.obs?`<br><span style="font-size:10px;color:#999">${s.obs}</span>`:''}</td>
-      <td style="text-align:center;font-weight:700;white-space:nowrap;color:${corEst[s.estado]||'#999'}">${icnEst[s.estado]||''} ${s.estado||'—'}</td>
+      <td style="text-align:center;font-weight:700;white-space:nowrap;color:${corEst[s.estado]||'#888'}">${icnEst[s.estado]||''} ${s.estado||'—'}</td>
       <td style="text-align:right;white-space:nowrap">${s.cache&&parseFloat(s.cache)>0?parseFloat(s.cache).toFixed(2)+'€':'—'}</td>
     </tr>`).join('');
-
     const linhasMembros = membros.map((m,i)=>`<tr>
-      <td style="text-align:center;color:#666">${i+1}</td>
-      <td style="font-weight:500">${m.nome}</td>
+      <td style="text-align:center;color:#888;width:36px">${i+1}</td>
+      <td style="font-weight:600">${m.nome}</td>
       <td>Nº ${m.num}</td>
       <td style="color:#666">${m.cat}</td>
     </tr>`).join('');
-
     const html = `<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><title>${v.nome} — Saídas ${new Date().getFullYear()}</title>${pdfCSS(cor)}</head><body>
     ${pdfHeader('🎵 '+v.nome, (v.ano?'Fundada em '+v.ano:'')+(v.desc?(v.ano?' · ':'')+v.desc:''), cor)}
     <div class="pdf-summary">
@@ -9848,7 +9857,7 @@ window._switchLoginTab = window.switchLoginTab || function(){};
     </div>
     <div class="pdf-section">
       <div class="pdf-section-title">👥 Membros da Valência</div>
-      ${membros.length?`<table><thead><tr><th style="text-align:center;width:40px">Nº</th><th>Nome</th><th>Nº Sócio</th><th>Categoria</th></tr></thead><tbody>${linhasMembros}</tbody></table>`
+      ${membros.length?`<table><thead><tr><th style="width:40px;text-align:center">Nº</th><th>Nome</th><th>Nº Sócio</th><th>Categoria</th></tr></thead><tbody>${linhasMembros}</tbody></table>`
         :'<p style="color:#999;font-style:italic;padding:10px 0">Nenhum membro associado.</p>'}
     </div>
     ${pdfFooter(v.nome+' · '+new Date().getFullYear())}
@@ -9857,5 +9866,6 @@ window._switchLoginTab = window.switchLoginTab || function(){};
     abrirPdf(html);
   };
 
+})(); // fim PDFs Premium
 })(); // fim PDFs Premium
 </script>
