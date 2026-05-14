@@ -1605,7 +1605,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 </div>
 
 <!-- MODAL NOVA/EDITAR VALÊNCIA -->
-<div class="modal-overlay" id="modal-valencia" style="display:none">
+<div class="modal-overlay" id="modal-valencia">
   <div class="modal" style="max-width:500px;width:95%">
     <div class="modal-header">
       <h3 id="modal-valencia-title">Nova Valência</h3>
@@ -1639,7 +1639,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 </div>
 
 <!-- MODAL NOVA/EDITAR SAÍDA -->
-<div class="modal-overlay" id="modal-saida-val" style="display:none">
+<div class="modal-overlay" id="modal-saida-val">
   <div class="modal" style="max-width:540px;width:95%">
     <div class="modal-header">
       <h3 id="modal-saida-val-title">Nova Saída</h3>
@@ -1695,7 +1695,7 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 </div>
 
 <!-- MODAL MEMBROS DA VALÊNCIA -->
-<div class="modal-overlay" id="modal-val-membros" style="display:none">
+<div class="modal-overlay" id="modal-val-membros">
   <div class="modal" style="max-width:640px;width:95%">
     <div class="modal-header">
       <h3 id="modal-val-membros-title">Membros da Valência</h3>
@@ -1719,6 +1719,68 @@ function switchLoginTab(t){if(window._switchLoginTab)window._switchLoginTab(t);e
 </div>
 
 <!-- MODAL SECRETARIA: CONVOCATÓRIA / ATA / PRESENÇA -->
+<!-- MODAL NOVO/EDITAR EVENTO -->
+<div class="modal-overlay" id="modal-evento">
+  <div class="modal" style="max-width:560px;width:95%">
+    <div class="modal-header">
+      <h3 id="modal-evento-title">Novo Evento</h3>
+      <button class="modal-close" onclick="closeModal('modal-evento')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px;display:flex;flex-direction:column;gap:14px">
+      <div class="form-group">
+        <label>Nome do Evento *</label>
+        <input type="text" id="t-nome" placeholder="Ex: Aniversário da Associação" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Tipo</label>
+          <input type="text" id="t-tipo" placeholder="Ex: Convívio, Desfile..." />
+        </div>
+        <div class="form-group">
+          <label>Local</label>
+          <input type="text" id="t-local" placeholder="Ex: Sede, Vizela..." />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Data início</label>
+          <input type="date" id="t-data" />
+        </div>
+        <div class="form-group">
+          <label>Data fim</label>
+          <input type="date" id="t-datafim" />
+        </div>
+        <div class="form-group">
+          <label>Prazo inscrição</label>
+          <input type="date" id="t-prazo" />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Vagas</label>
+          <input type="number" id="t-vagas" value="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="t-estado">
+            <option value="aberto">✅ Aberto</option>
+            <option value="fechado">🔒 Fechado</option>
+            <option value="cancelado">❌ Cancelado</option>
+            <option value="realizado">🏁 Realizado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="t-desc" rows="3" placeholder="Detalhes do evento..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border2)">
+      <button class="btn-sec" onclick="closeModal('modal-evento')">Cancelar</button>
+      <button class="btn-prim" onclick="gravarEvento()">Guardar</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="modal-secretaria">
   <div class="modal" style="max-width:720px;width:95%">
     <div class="modal-header">
