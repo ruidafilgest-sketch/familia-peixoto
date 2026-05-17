@@ -2291,6 +2291,7 @@ document.addEventListener('DOMContentLoaded', aplicarLogoGlobal);
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, update, remove, push, onValue }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDKyIymvaOjD4_CjIXH8Y8AhD4CQrpKi0c",
@@ -2304,6 +2305,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+signInAnonymously(auth).catch(e => console.warn('Auth anónimo falhou:', e));
 
 // Expor funções Firebase para módulos internos
 window._dbRef = (path) => ref(db, path);
